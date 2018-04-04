@@ -1,3 +1,14 @@
+CREATE TABLE user_app
+(
+  id                BIGSERIAL PRIMARY KEY,
+  name              CHARACTER VARYING           NOT NULL,
+  email             CHARACTER VARYING           NOT NULL,
+  password          CHARACTER VARYING           NOT NULL,
+  profile           CHARACTER VARYING           NOT NULL,
+  date_birth        DATE                        NOT NULL,
+  registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now()
+);
+
 CREATE TABLE state
 (
   id    BIGSERIAL PRIMARY KEY,
@@ -21,6 +32,12 @@ CREATE TABLE location
   FOREIGN KEY (city_id) REFERENCES city (id)
 );
 
+CREATE TABLE category
+(
+  id       BIGSERIAL PRIMARY KEY,
+  category CHARACTER VARYING NOT NULL
+);
+
 CREATE TABLE event
 (
   id          BIGSERIAL PRIMARY KEY,
@@ -28,7 +45,19 @@ CREATE TABLE event
   title       CHARACTER VARYING NOT NULL,
   description CHARACTER VARYING NOT NULL,
   location_id INT               NOT NULL,
-  FOREIGN KEY (location_id) REFERENCES location (id)
+  user_app_id INT               NOT NULL,
+  status      INT               NOT NULL,
+  FOREIGN KEY (location_id) REFERENCES LOCATION (id),
+  FOREIGN KEY (user_app_id) REFERENCES user_app (id)
+);
+
+CREATE TABLE event_category
+(
+  id          BIGSERIAL PRIMARY KEY,
+  event_id    INT NOT NULL,
+  category_id INT NOT NULL,
+  FOREIGN KEY (event_id) REFERENCES event (id),
+  FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
 CREATE TABLE price
@@ -37,15 +66,12 @@ CREATE TABLE price
   price DOUBLE PRECISION NOT NULL
 );
 
-CREATE TABLE date_event
+CREATE TABLE event_date
 (
   id         BIGSERIAL PRIMARY KEY,
-  date_event TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
   event_id   INT                         NOT NULL,
   price_id   INT                         NOT NULL,
   FOREIGN KEY (event_id) REFERENCES event (id),
   FOREIGN KEY (price_id) REFERENCES price (id)
 );
-
-
-
