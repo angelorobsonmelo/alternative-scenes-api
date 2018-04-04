@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/angelorobsonmelo/alternative-scenes-api.svg?branch=master)](https://travis-ci.org/angelorobsonmelo/alternative-scenes-api)
 
 ## Alternative Scene
  Alternative scene system API with Java and Spring Boot.
