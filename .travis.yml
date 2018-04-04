@@ -2,4 +2,6 @@ language: java
 sudo: true
 dist: trusty
 jdk: oraclejdk8
+before_install:
+  - chmod +x mvnw
 
