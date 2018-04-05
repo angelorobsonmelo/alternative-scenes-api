@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.angelorobson.alternativescene.builders.GenericBuilder.of;
+import static java.util.Arrays.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,9 +42,6 @@ public class UserAppControllerTest {
   private UserAppService userAppService;
 
   private static final String URL_BASE = "/users_app";
-
-  @Mock
-  Page<UserApp> userApps;
 
   @Before
   public void setUp() {
@@ -66,7 +64,7 @@ public class UserAppControllerTest {
       .with(UserAppDto::setImageUrl, "https://image_2.jpg")
       .build();
 
-    return Arrays.asList(userAppOne, userAppTwo);
+    return asList(userAppOne, userAppTwo);
   }
 
   @Test

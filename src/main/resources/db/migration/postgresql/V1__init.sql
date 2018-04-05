@@ -5,6 +5,7 @@ CREATE TABLE user_app
   email             CHARACTER VARYING           NOT NULL,
   password          CHARACTER VARYING           NOT NULL,
   profile           CHARACTER VARYING           NOT NULL,
+  image_url         CHARACTER VARYING           NOT NULL,
   date_birth        DATE                        NOT NULL,
   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );

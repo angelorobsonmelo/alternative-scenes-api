@@ -44,7 +44,7 @@ public class UserAppAppServiceImpl implements UserAppService {
     log.info("Get all users {}", pageRequest);
     Page<UserApp> userAppPage = userAppRepository.findAll(pageRequest);
 
-    return userAppPage.map(userApp -> this.convertUserAppToDto(userApp));
+    return userAppPage.map(this::convertUserAppToDto);
   }
 
   private UserAppDto convertUserAppToDto(UserApp userApp) {
