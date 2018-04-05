@@ -1,5 +1,6 @@
 package com.angelorobson.alternativescene.services;
 
+import com.angelorobson.alternativescene.dtos.UserAppDto;
 import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.repositories.UserAppRepository;
 import org.junit.Before;
@@ -9,9 +10,13 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.Assert.assertNotNull;
@@ -41,6 +46,8 @@ public class UserAppServiceTest {
     when(userAppRepository.save(any(UserApp.class))).thenReturn(new UserApp());
     when(userAppRepository.findByEmail(anyString())).thenReturn(new UserApp());
     when(userAppRepository.findOne(anyLong())).thenReturn(new UserApp());
+    when(userAppRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>
+      (new ArrayList<>()));
   }
 
   @Test
@@ -65,7 +72,15 @@ public class UserAppServiceTest {
 
     verify(userAppRepository).findOne(eq(ID));
     assertTrue(userAppReturned.isPresent());
+  }
 
+  @Test
+  public void it_should_get_all_users() {
+    PageRequest pageRequest = new PageRequest(0, 10);
+    Page<UserAppDto> userAppPageReturned = userAppService.findAll(pageRequest);
+
+    verify(userAppRepository).findAll(eq(pageRequest));
+    assertNotNull(userAppPageReturned);
   }
 
 

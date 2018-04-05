@@ -21,8 +21,8 @@ public class UserApp implements Serializable {
     private String password;
     private ProfileEnum profile;
     private LocalDate dateBirth;
-
     private LocalDate registrationDate;
+    private String imageUrl;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -87,9 +87,36 @@ public class UserApp implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    @PrePersist
+  public static long getSerialVersionUID() {
+    return serialVersionUID;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  @Column(nullable = false)
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
+  @PrePersist
     public void prePersist() {
         final LocalDate now = LocalDate.now();
         this.registrationDate = now;
     }
+
+  @Override
+  public String toString() {
+    return "UserApp{" +
+      "id=" + id +
+      ", name='" + name + '\'' +
+      ", email='" + email + '\'' +
+      ", password='" + password + '\'' +
+      ", profile=" + profile +
+      ", dateBirth=" + dateBirth +
+      ", registrationDate=" + registrationDate +
+      ", imageUrl='" + imageUrl + '\'' +
+      '}';
+  }
 }

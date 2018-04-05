@@ -1,11 +1,14 @@
 package com.angelorobson.alternativescene.services.impl;
 
+import com.angelorobson.alternativescene.dtos.UserAppDto;
 import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.repositories.UserAppRepository;
 import com.angelorobson.alternativescene.services.UserAppService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,4 +38,21 @@ public class UserAppAppServiceImpl implements UserAppService {
         log.info("Finding a UserApp by ID: {}", id);
         return Optional.ofNullable(userAppRepository.findOne(id));
     }
+
+  @Override
+  public Page<UserAppDto> findAll(PageRequest pageRequest) {
+    log.info("Get all users {}", pageRequest);
+    Page<UserApp> userAppPage = userAppRepository.findAll(pageRequest);
+
+    return userAppPage.map(userApp -> this.convertUserAppToDto(userApp));
+  }
+
+  private UserAppDto convertUserAppToDto(UserApp userApp) {
+      UserAppDto userAppDto = new UserAppDto();
+      userAppDto.setId(userApp.getId());
+      userAppDto.setName(userApp.getName());
+      userAppDto.setImageUrl(userApp.getImageUrl());
+
+      return userAppDto;
+  }
 }
