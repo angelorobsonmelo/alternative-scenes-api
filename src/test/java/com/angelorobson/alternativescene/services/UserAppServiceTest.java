@@ -82,6 +82,4 @@ public class UserAppServiceTest {
     verify(userAppRepository).findAll(eq(pageRequest));
     assertNotNull(userAppPageReturned);
   }
-
-
 }
