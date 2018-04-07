@@ -65,12 +65,12 @@ public class UserAppControllerTest {
 
   private static final String URL_BASE = "/users_app";
 
+  Page<UserAppDto> pagedResponse;
+
   @Before
   public void setUp() {
     List<UserAppDto> userAppsDto = getUserAppsDto();
-    Page<UserAppDto> pagedResponse = new PageImpl(userAppsDto);
-
-    when(userAppService.findAll(any(PageRequest.class))).thenReturn(pagedResponse);
+    pagedResponse = new PageImpl(userAppsDto);
   }
 
   private List<UserAppDto> getUserAppsDto() {
@@ -91,6 +91,8 @@ public class UserAppControllerTest {
 
   @Test
   public void it_shold_return_users() throws Exception {
+    given(userAppService.findAll(any(PageRequest.class))).willReturn(pagedResponse);
+    
     mockMvc.perform(get(URL_BASE))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.data.content[0].id").value("1"))
