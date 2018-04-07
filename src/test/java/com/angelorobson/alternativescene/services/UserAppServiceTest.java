@@ -1,6 +1,7 @@
 package com.angelorobson.alternativescene.services;
 
 import com.angelorobson.alternativescene.dtos.UserAppDto;
+import com.angelorobson.alternativescene.dtos.UserAppSaveDto;
 import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.repositories.UserAppRepository;
 import org.junit.Before;
@@ -36,6 +37,7 @@ public class UserAppServiceTest {
   private UserAppService userAppService;
 
   private UserApp userApp;
+  private UserAppSaveDto userAppSaveDto;
 
   private static final String EMAIL = "admin@gmail.com";
   private static final Long ID = 1L;
@@ -43,6 +45,7 @@ public class UserAppServiceTest {
   @Before
   public void setUp() {
     userApp = new UserApp();
+    userAppSaveDto = new UserAppSaveDto();
     when(userAppRepository.save(any(UserApp.class))).thenReturn(new UserApp());
     when(userAppRepository.findByEmail(anyString())).thenReturn(new UserApp());
     when(userAppRepository.findOne(anyLong())).thenReturn(new UserApp());
@@ -52,10 +55,10 @@ public class UserAppServiceTest {
 
   @Test
   public void it_should_persist_user() {
-    UserApp userAppReturned = userAppService.persist(this.userApp);
+    UserAppDto userAppReturnedDto = userAppService.persist(this.userApp);
 
     verify(userAppRepository).save(eq(this.userApp));
-    assertNotNull(userAppReturned);
+    assertNotNull(userAppReturnedDto);
   }
 
   @Test
@@ -82,4 +85,5 @@ public class UserAppServiceTest {
     verify(userAppRepository).findAll(eq(pageRequest));
     assertNotNull(userAppPageReturned);
   }
+
 }

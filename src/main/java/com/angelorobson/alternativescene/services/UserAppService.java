@@ -15,7 +15,7 @@ public interface UserAppService {
    * @param userApp
    * @return UserApp
    */
-  UserApp persist(UserApp userApp);
+  UserAppDto persist(UserApp userApp);
 
   /**
    * Search and return a given user an email.

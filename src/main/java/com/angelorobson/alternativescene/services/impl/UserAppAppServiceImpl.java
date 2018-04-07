@@ -16,28 +16,29 @@ import java.util.Optional;
 @Service
 public class UserAppAppServiceImpl implements UserAppService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserAppAppServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(UserAppAppServiceImpl.class);
 
-    @Autowired
-    private UserAppRepository userAppRepository;
+  @Autowired
+  private UserAppRepository userAppRepository;
 
-    @Override
-    public UserApp persist(UserApp userApp) {
-        log.info("Persisting a UserApp {}", userApp);
-        return userAppRepository.save(userApp);
-    }
+  @Override
+  public UserAppDto persist(UserApp userApp) {
+    log.info("Persisting a UserApp {}", userApp);
+    UserApp userAppReturned = userAppRepository.save(userApp);
+    return convertUserAppToDto(userAppReturned);
+  }
 
-    @Override
-    public Optional<UserApp> findByEmail(String email) {
-        log.info("Finding a UserApp by Email: {}", email);
-        return Optional.ofNullable(userAppRepository.findByEmail(email));
-    }
+  @Override
+  public Optional<UserApp> findByEmail(String email) {
+    log.info("Finding a UserApp by Email: {}", email);
+    return Optional.ofNullable(userAppRepository.findByEmail(email));
+  }
 
-    @Override
-    public Optional<UserApp> findById(Long id) {
-        log.info("Finding a UserApp by ID: {}", id);
-        return Optional.ofNullable(userAppRepository.findOne(id));
-    }
+  @Override
+  public Optional<UserApp> findById(Long id) {
+    log.info("Finding a UserApp by ID: {}", id);
+    return Optional.ofNullable(userAppRepository.findOne(id));
+  }
 
   @Override
   public Page<UserAppDto> findAll(PageRequest pageRequest) {
@@ -48,11 +49,12 @@ public class UserAppAppServiceImpl implements UserAppService {
   }
 
   private UserAppDto convertUserAppToDto(UserApp userApp) {
-      UserAppDto userAppDto = new UserAppDto();
-      userAppDto.setId(userApp.getId());
-      userAppDto.setName(userApp.getName());
-      userAppDto.setImageUrl(userApp.getImageUrl());
+    UserAppDto userAppDto = new UserAppDto();
+    userAppDto.setId(userApp.getId());
+    userAppDto.setName(userApp.getName());
+    userAppDto.setImageUrl(userApp.getImageUrl());
+    userAppDto.setEmail(userApp.getEmail());
 
-      return userAppDto;
+    return userAppDto;
   }
 }

@@ -1,3 +1,5 @@
+CREATE SEQUENCE hibernate_sequence START 1;
+
 CREATE TABLE user_app
 (
   id                BIGSERIAL PRIMARY KEY,
