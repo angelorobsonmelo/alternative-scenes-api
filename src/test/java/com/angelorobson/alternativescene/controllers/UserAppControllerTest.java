@@ -3,21 +3,12 @@ package com.angelorobson.alternativescene.controllers;
 import com.angelorobson.alternativescene.dtos.UserAppDto;
 import com.angelorobson.alternativescene.dtos.UserAppSaveDto;
 import com.angelorobson.alternativescene.entities.UserApp;
-import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.UserAppService;
-import com.angelorobson.alternativescene.utils.PasswordUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,21 +22,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static com.angelorobson.alternativescene.builders.GenericBuilder.of;
-import static com.angelorobson.alternativescene.utils.PasswordUtils.*;
-import static java.time.Month.JANUARY;
-import static java.util.Arrays.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.*;
+import static java.util.Arrays.asList;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,12 +47,19 @@ public class UserAppControllerTest {
 
   private static final String URL_BASE = "/users_app";
 
-  Page<UserAppDto> pagedResponse;
+  private Page<UserAppDto> pagedResponse;
+
+  private UserAppDto userAppDto;
 
   @Before
   public void setUp() {
     List<UserAppDto> userAppsDto = getUserAppsDto();
     pagedResponse = new PageImpl(userAppsDto);
+    userAppDto = new UserAppDto();
+    userAppDto.setId(1L);
+    userAppDto.setEmail("jose@gmail.com");
+    userAppDto.setImageUrl("https://image_1.JPG");
+    userAppDto.setName("José da silva");
   }
 
   private List<UserAppDto> getUserAppsDto() {
@@ -104,15 +93,12 @@ public class UserAppControllerTest {
 
   @Test
   public void it_should_persist_user() throws Exception {
-    UserAppDto userAppDto = new UserAppDto();
-    userAppDto.setId(1L);
-    userAppDto.setEmail("jose@gmail.com");
-    userAppDto.setImageUrl("https://image_1.JPG");
-    userAppDto.setName("José da silva");
 
     given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
 
-    String jsonRequisition = this.getJsonRequisitionPost();
+    String jsonRequisition = this.getJsonRequisitionPost("josé", "jose@gmail.com", "123",
+            "http://image_1.JPG", LocalDate.of(2010, 1, 3));
+
     mockMvc.perform(post(URL_BASE)
       .content(jsonRequisition)
       .contentType(MediaType.APPLICATION_JSON)
@@ -122,13 +108,118 @@ public class UserAppControllerTest {
       .andExpect(jsonPath("$.errors").isEmpty());
   }
 
-  private String getJsonRequisitionPost() throws JsonProcessingException {
+  @Test
+  public void it_should_persist_user_with_name_null_value() throws Exception {
+    given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
+
+    String jsonRequisition = this.getJsonRequisitionPost(null, "jose@gmail.com", "123",
+            "http://image_1.JPG", LocalDate.of(2010, 1, 3));
+
+    mockMvc.perform(post(URL_BASE)
+      .content(jsonRequisition)
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.data").isEmpty())
+      .andExpect(jsonPath("$.errors").isNotEmpty())
+      .andExpect(jsonPath("$.errors[0]").value("Name can not be empty."));
+  }
+
+
+  @Test
+  public void it_should_persist_user_with_email_null_value() throws Exception {
+    given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
+
+    String jsonRequisition = this.getJsonRequisitionPost("José", null, "123",
+            "http://image_1.JPG", LocalDate.of(2010, 1, 3));
+
+    mockMvc.perform(post(URL_BASE)
+      .content(jsonRequisition)
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.data").isEmpty())
+      .andExpect(jsonPath("$.errors").isNotEmpty())
+      .andExpect(jsonPath("$.errors[0]").value("Email can not be empty."));
+  }
+
+  @Test
+  public void it_should_persist_user_with_password_null_value() throws Exception {
+    given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
+
+    String jsonRequisition = this.getJsonRequisitionPost("José", "jose@gmail.com", null,
+            "http://image_1.JPG", LocalDate.of(2010, 1, 3));
+
+    mockMvc.perform(post(URL_BASE)
+      .content(jsonRequisition)
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.data").isEmpty())
+      .andExpect(jsonPath("$.errors").isNotEmpty())
+      .andExpect(jsonPath("$.errors[0]").value("Password can not be empty."));
+  }
+
+  @Test
+  public void it_should_persist_user_with_image_null_value() throws Exception {
+    given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
+
+    String jsonRequisition = this.getJsonRequisitionPost("José", "jose@gmail.com", "123",
+            null, LocalDate.of(2010, 1, 3));
+
+    mockMvc.perform(post(URL_BASE)
+      .content(jsonRequisition)
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.data").isNotEmpty())
+      .andExpect(jsonPath("$.errors").isEmpty());
+  }
+
+  @Test
+  public void it_should_persist_user_with_datebirth_null_value() throws Exception {
+    given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
+
+    String jsonRequisition = this.getJsonRequisitionPost("José", "jose@gmail.com", "123",
+            "http://image_1.JPG", null);
+
+    mockMvc.perform(post(URL_BASE)
+      .content(jsonRequisition)
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.data").isEmpty())
+      .andExpect(jsonPath("$.errors").isNotEmpty())
+      .andExpect(jsonPath("$.errors[0]").value("DateBirth can not be empty."));
+  }
+
+  @Test
+  public void it_should_persist_user_with_all_empty_required_fields() throws Exception {
+    given(userAppService.persist(any(UserApp.class))).willReturn(userAppDto);
+
+    String jsonRequisition = this.getJsonRequisitionPost(null, null, null,
+            "http://image_1.JPG", null);
+
+    mockMvc.perform(post(URL_BASE)
+      .content(jsonRequisition)
+      .contentType(MediaType.APPLICATION_JSON)
+      .accept(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$.data").isEmpty())
+      .andExpect(jsonPath("$.errors").isNotEmpty())
+      .andExpect(jsonPath("$.errors[0]").isNotEmpty())
+      .andExpect(jsonPath("$.errors[1]").isNotEmpty())
+      .andExpect(jsonPath("$.errors[2]").isNotEmpty())
+      .andExpect(jsonPath("$.errors[3]").isNotEmpty());
+  }
+
+  private String getJsonRequisitionPost(String name, String email, String password, String imageUrl, LocalDate birthDate) throws JsonProcessingException {
     UserAppSaveDto userAppSaveDto = new UserAppSaveDto();
-    userAppSaveDto.setName("José");
-    userAppSaveDto.setEmail("jose@gmail.com");
-    userAppSaveDto.setPassword("123");
-    userAppSaveDto.setImageUrl("https://img_1.JPG");
-    userAppSaveDto.setDateBirth(LocalDate.of(2014, 1, 1));
+    userAppSaveDto.setName(name);
+    userAppSaveDto.setEmail(email);
+    userAppSaveDto.setPassword(password);
+    userAppSaveDto.setImageUrl(imageUrl);
+    userAppSaveDto.setDateBirth(birthDate);
     ObjectMapper mapper = new ObjectMapper();
     return mapper.writeValueAsString(userAppSaveDto);
   }
