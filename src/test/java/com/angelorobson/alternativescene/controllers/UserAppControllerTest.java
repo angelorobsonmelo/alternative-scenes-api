@@ -8,7 +8,6 @@ import com.angelorobson.alternativescene.services.UserAppService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.apache.tomcat.jni.Local;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,6 @@ import static java.util.Arrays.asList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -248,6 +246,24 @@ public class UserAppControllerTest {
                 .andExpect(jsonPath("$.errors").isEmpty());
     }
 
+
+    @Test
+    public void it_should_return_user_not_found_when_editing_a_non_existent_user() throws Exception {
+        given(userAppService.findById(anyLong())).willReturn(Optional.empty());
+        given(userAppService.edit(any(UserApp.class))).willReturn(userAppDto);
+
+        String jsonRequisition = this.getJsonRequisitionPost(Optional.of(1L), "Manoel", "monoel@gmail.com", "manu123",
+                "http://image_2.JPG", LocalDate.of(2010, 1, 10));
+
+        mockMvc.perform(put(URL_BASE)
+                .content(jsonRequisition)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.errors[0]").value("User not found."));
+    }
+
     @Test
     @WithMockUser(username = "admin@admin.com", roles = {"ADMIN"})
     public void it_should_remove_user() throws Exception {
@@ -255,6 +271,16 @@ public class UserAppControllerTest {
 
       mockMvc.perform(delete(URL_BASE + "/" +ID))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "admin@admin.com", roles = {"ADMIN"})
+    public void it_should_remove_non_existent_user() throws Exception {
+      given(this.userAppService.findById(anyLong())).willReturn(Optional.empty());
+
+      mockMvc.perform(delete(URL_BASE + "/" +ID))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors[0]").value("Error removing user. Record not found for id " + ID));
     }
 
     @Test

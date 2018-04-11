@@ -71,11 +71,10 @@ public class UserAppController {
    * @param userAppSaveDto
    * @param result
    * @return ResponseEntity<Response<UserAppDto>>
-   * @throws ParseException
    */
   @PostMapping
   public ResponseEntity<Response<UserAppDto>> save(@Valid @RequestBody UserAppSaveDto userAppSaveDto,
-                                                   BindingResult result) throws ParseException {
+                                                   BindingResult result) {
     log.info("Adding User: {}", userAppSaveDto.toString());
     Response<UserAppDto> response = new Response<>();
     validateUser(userAppSaveDto, result);
@@ -107,7 +106,7 @@ public class UserAppController {
 
     if (!userApp.isPresent()) {
       log.info("Error removing because user ID: {} must be invalid.", id);
-      response.getErrors().add("Error removing user. Record not found for id  " + id);
+      response.getErrors().add("Error removing user. Record not found for id " + id);
       return ResponseEntity.badRequest().body(response);
     }
 
@@ -163,9 +162,8 @@ public class UserAppController {
    * @param userAppSaveDto
    * @param result
    * @return UserApp
-   * @throws ParseException
    */
-  private UserApp convertDToToUser(UserAppSaveDto userAppSaveDto, BindingResult result) throws ParseException {
+  private UserApp convertDToToUser(UserAppSaveDto userAppSaveDto, BindingResult result) {
     UserApp userApp = new UserApp();
 
     if (userAppSaveDto.getId().isPresent()) {
