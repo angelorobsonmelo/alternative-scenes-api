@@ -6,6 +6,7 @@ import com.angelorobson.alternativescene.repositories.UserAppRepository;
 import com.angelorobson.alternativescene.services.UserAppService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,7 +49,20 @@ public class UserAppAppServiceImpl implements UserAppService {
     return userAppPage.map(this::convertUserAppToDto);
   }
 
-  private UserAppDto convertUserAppToDto(UserApp userApp) {
+  @Override
+  public UserAppDto edit(UserApp userApp) {
+    log.info("Editing a UserApp {}", userApp);
+    UserApp userAppReturned = userAppRepository.save(userApp);
+    return convertUserAppToDto(userAppReturned);
+  }
+
+    @Override
+    public void remove(Long id) {
+        log.info("Removing a UserApp with {}", id);
+        userAppRepository.delete(id);
+    }
+
+    private UserAppDto convertUserAppToDto(UserApp userApp) {
     UserAppDto userAppDto = new UserAppDto();
     userAppDto.setId(userApp.getId());
     userAppDto.setName(userApp.getName());

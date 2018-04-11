@@ -1,5 +1,7 @@
 package com.angelorobson.alternativescene.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -23,6 +25,7 @@ public class UserAppSaveDto {
   private String password;
   private LocalDate dateBirth;
   private String imageUrl;
+
 
   public Optional<Long> getId() {
     return id;

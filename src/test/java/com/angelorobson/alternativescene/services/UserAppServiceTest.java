@@ -86,4 +86,19 @@ public class UserAppServiceTest {
     assertNotNull(userAppPageReturned);
   }
 
+  @Test
+  public void it_should_editt_user() {
+    UserAppDto userAppReturnedDto = userAppService.edit(this.userApp);
+
+    verify(userAppRepository).save(eq(this.userApp));
+    assertNotNull(userAppReturnedDto);
+  }
+
+  @Test
+  public void it_should_editt_remove_user() {
+    userAppService.remove(ID);
+
+    verify(userAppRepository).delete(eq(ID));
+  }
+
 }

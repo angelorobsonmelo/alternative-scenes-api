@@ -39,5 +39,22 @@ public interface UserAppService {
    * @param pageRequest
    * @return Page<UserApp>
    */
-  Page<UserAppDto> findAll(PageRequest pageRequest);
+   Page<UserAppDto> findAll(PageRequest pageRequest);
+
+
+  /**
+   * A userApp edit in the database.
+   *
+   * @param userApp
+   * @return UserApp
+   */
+   UserAppDto edit(UserApp userApp);
+
+    /**
+     * Remove a user database.
+     *
+     * @param id
+     * @return UserApp
+     */
+    void remove(Long id);
 }
