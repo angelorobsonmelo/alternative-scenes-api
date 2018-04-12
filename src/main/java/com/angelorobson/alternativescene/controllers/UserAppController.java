@@ -169,7 +169,12 @@ public class UserAppController {
     if (userAppSaveDto.getId().isPresent()) {
       Optional<UserApp> user = this.userAppService.findById(userAppSaveDto.getId().get());
       if (user.isPresent()) {
-        copyProperties(userAppSaveDto, user.get(), "email", "password", "id");
+          if (userAppSaveDto.getPassword() != null) {
+              user.get().setPassword(generateBCrypt(userAppSaveDto.getPassword()));
+          }
+
+          copyProperties(userAppSaveDto, user.get(), "email", "id", "password");
+
         userApp = user.get();
         return userApp;
       } else {
