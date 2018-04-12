@@ -68,6 +68,7 @@ public class UserAppAppServiceImpl implements UserAppService {
     userAppDto.setName(userApp.getName());
     userAppDto.setImageUrl(userApp.getImageUrl());
     userAppDto.setEmail(userApp.getEmail());
+    userAppDto.setRegistrationDate(userApp.getRegistrationDate());
 
     return userAppDto;
   }

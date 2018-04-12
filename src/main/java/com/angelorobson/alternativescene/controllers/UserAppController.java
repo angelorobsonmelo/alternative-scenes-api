@@ -1,13 +1,13 @@
 package com.angelorobson.alternativescene.controllers;
 
 import com.angelorobson.alternativescene.dtos.UserAppDto;
+import com.angelorobson.alternativescene.dtos.UserAppEditDto;
 import com.angelorobson.alternativescene.dtos.UserAppSaveDto;
 import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.enums.ProfileEnum;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.UserAppService;
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -24,8 +24,9 @@ import java.text.ParseException;
 import java.util.Optional;
 
 import static com.angelorobson.alternativescene.utils.PasswordUtils.generateBCrypt;
+import static java.util.Optional.of;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.beans.BeanUtils.*;
+import static org.springframework.beans.BeanUtils.copyProperties;
 
 @RestController
 @RequestMapping("/users_app")
@@ -78,7 +79,7 @@ public class UserAppController {
     log.info("Adding User: {}", userAppSaveDto.toString());
     Response<UserAppDto> response = new Response<>();
     validateUser(userAppSaveDto, result);
-    UserApp userApp = this.convertDToToUser(userAppSaveDto, result);
+    UserApp userApp = this.convertUserSaveAppDToToUserApp(userAppSaveDto, result);
 
     if (result.hasErrors()) {
       log.error("Error validating user: {}", result.getAllErrors());
@@ -116,25 +117,30 @@ public class UserAppController {
 
 
   /**
-   * Adds a new user.
+   * Updates a user's data.
    *
-   * @param userAppSaveDto
-   * @param result
-   * @return ResponseEntity<Response<UserAppDto>>
+   * @param id
+   * @param userAppEditDto
+   * @return ResponseEntity<Response<Lancamento>>
    * @throws ParseException
    */
-  @PutMapping
-  public ResponseEntity<Response<UserAppDto>> update(@Valid @RequestBody UserAppSaveDto userAppSaveDto,
-                                                   BindingResult result) throws ParseException {
-    log.info("Editing user: {}", userAppSaveDto.toString());
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<Response<UserAppDto>> update(@PathVariable("id") Long id,
+                                                     @Valid @RequestBody UserAppEditDto userAppEditDto, BindingResult result) {
+    log.info("Updates a user's data.: {}", userAppEditDto.toString());
     Response<UserAppDto> response = new Response<>();
-    validateUser(userAppSaveDto, result);
-    UserApp userApp = this.convertDToToUser(userAppSaveDto, result);
+    validateUser(userAppEditDto, result);
+    userAppEditDto.setId(of(id));
+    UserApp userApp = this.convertUserEditAppDToToUserApp(userAppEditDto, result);
 
     if (result.hasErrors()) {
       log.error("Error validating user: {}", result.getAllErrors());
-      result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-      return ResponseEntity.badRequest().body(response);
+      if (result.hasErrors()) {
+        log.error("Error validating user: {}", result.getAllErrors());
+        result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(response);
+      }
+
     }
 
     UserAppDto userAppDto = this.userAppService.edit(userApp);
@@ -147,33 +153,52 @@ public class UserAppController {
   /**
    * Validate a user, verifying that it is existing and valid on the system.
    *
-   * @param userAppSaveDto
+   * @param o
    * @param result
    */
-  private void validateUser(UserAppSaveDto userAppSaveDto, BindingResult result) {
-    if (userAppSaveDto == null) {
+  private void validateUser(Object o, BindingResult result) {
+    if (o == null) {
       result.addError(new ObjectError("user", "User not informed."));
     }
   }
 
   /**
-   * Convert a User to a entity.
+   * Convert a User save dto to a entity.
    *
    * @param userAppSaveDto
    * @param result
    * @return UserApp
    */
-  private UserApp convertDToToUser(UserAppSaveDto userAppSaveDto, BindingResult result) {
+  private UserApp convertUserSaveAppDToToUserApp(UserAppSaveDto userAppSaveDto, BindingResult result) {
+    UserApp userApp = new UserApp();
+    userApp.setName(userAppSaveDto.getName());
+    userApp.setEmail(userAppSaveDto.getEmail());
+    userApp.setPassword(generateBCrypt(userAppSaveDto.getPassword()));
+    userApp.setDateBirth(userAppSaveDto.getDateBirth());
+    userApp.setImageUrl(userAppSaveDto.getImageUrl());
+    userApp.setProfile(ProfileEnum.ROLE_USER);
+
+    return userApp;
+  }
+
+  /**
+   * Convert a User edit dto to a entity.
+   *
+   * @param userAppEditDto
+   * @param result
+   * @return UserApp
+   */
+  private UserApp convertUserEditAppDToToUserApp(UserAppEditDto userAppEditDto, BindingResult result) {
     UserApp userApp = new UserApp();
 
-    if (userAppSaveDto.getId().isPresent()) {
-      Optional<UserApp> user = this.userAppService.findById(userAppSaveDto.getId().get());
+    if (userAppEditDto.getId().isPresent()) {
+      Optional<UserApp> user = this.userAppService.findById(userAppEditDto.getId().get());
       if (user.isPresent()) {
-          if (userAppSaveDto.getPassword() != null) {
-              user.get().setPassword(generateBCrypt(userAppSaveDto.getPassword()));
-          }
+        if (userAppEditDto.getPassword() != null) {
+          user.get().setPassword(generateBCrypt(userAppEditDto.getPassword()));
+        }
 
-          copyProperties(userAppSaveDto, user.get(), "email", "id", "password");
+        copyProperties(userAppEditDto, user.get(), "email", "id", "password");
 
         userApp = user.get();
         return userApp;
@@ -181,13 +206,6 @@ public class UserAppController {
         result.addError(new ObjectError("user", "User not found."));
       }
     }
-
-    userApp.setName(userAppSaveDto.getName());
-    userApp.setEmail(userAppSaveDto.getEmail());
-    userApp.setPassword(generateBCrypt(userAppSaveDto.getPassword()));
-    userApp.setDateBirth(userAppSaveDto.getDateBirth());
-    userApp.setImageUrl(userAppSaveDto.getImageUrl());
-    userApp.setProfile(ProfileEnum.ROLE_USER);
 
     return userApp;
   }

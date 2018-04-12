@@ -1,6 +1,7 @@
 package com.angelorobson.alternativescene.controllers;
 
 import com.angelorobson.alternativescene.dtos.UserAppDto;
+import com.angelorobson.alternativescene.dtos.UserAppEditDto;
 import com.angelorobson.alternativescene.dtos.UserAppSaveDto;
 import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.enums.ProfileEnum;
@@ -219,6 +220,7 @@ public class UserAppControllerTest {
   }
 
     @Test
+    @WithMockUser
     public void it_should_edit_user() throws Exception {
         UserApp userApp = new UserApp();
         userApp.setId(1L);
@@ -233,10 +235,10 @@ public class UserAppControllerTest {
         given(userAppService.findById(anyLong())).willReturn(Optional.of(userApp));
         given(userAppService.edit(any(UserApp.class))).willReturn(userAppDto);
 
-        String jsonRequisition = this.getJsonRequisitionPost(Optional.of(1L), "Manoel", "monoel@gmail.com", "manu123",
+        String jsonRequisition = this.getJsonRequisitionPut(Optional.of(1L), "Manoel", "manu123",
                 "http://image_2.JPG", LocalDate.of(2010, 1, 10));
 
-        mockMvc.perform(put(URL_BASE)
+        mockMvc.perform(put(URL_BASE + "/"  + ID)
                 .content(jsonRequisition)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -248,14 +250,15 @@ public class UserAppControllerTest {
 
 
     @Test
+    @WithMockUser
     public void it_should_return_user_not_found_when_editing_a_non_existent_user() throws Exception {
         given(userAppService.findById(anyLong())).willReturn(Optional.empty());
         given(userAppService.edit(any(UserApp.class))).willReturn(userAppDto);
 
-        String jsonRequisition = this.getJsonRequisitionPost(Optional.of(1L), "Manoel", "monoel@gmail.com", "manu123",
+        String jsonRequisition = this.getJsonRequisitionPut(Optional.of(1L), "Manoel", "manu123",
                 "http://image_2.JPG", LocalDate.of(2010, 1, 10));
 
-        mockMvc.perform(put(URL_BASE)
+        mockMvc.perform(put(URL_BASE + "/" + ID)
                 .content(jsonRequisition)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -307,6 +310,18 @@ public class UserAppControllerTest {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new Jdk8Module());
     return mapper.writeValueAsString(userAppSaveDto);
+  }
+
+  private String getJsonRequisitionPut(Optional<Long> id, String name, String password, String imageUrl, LocalDate birthDate) throws JsonProcessingException {
+    UserAppEditDto userAppEditDto = new UserAppEditDto();
+    userAppEditDto.setId(id);
+    userAppEditDto.setName(name);
+    userAppEditDto.setPassword(password);
+    userAppEditDto.setImageUrl(imageUrl);
+    userAppEditDto.setDateBirth(birthDate);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new Jdk8Module());
+    return mapper.writeValueAsString(userAppEditDto);
   }
 
 }

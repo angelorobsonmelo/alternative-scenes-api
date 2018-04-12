@@ -1,11 +1,14 @@
 package com.angelorobson.alternativescene.dtos;
 
+import java.time.LocalDate;
+
 public class UserAppDto {
 
   private Long id;
   private String name;
   private String imageUrl;
   private String email;
+  private LocalDate registrationDate;
 
   public Long getId() {
     return id;
@@ -37,6 +40,14 @@ public class UserAppDto {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public LocalDate getRegistrationDate() {
+    return registrationDate;
+  }
+
+  public void setRegistrationDate(LocalDate registrationDate) {
+    this.registrationDate = registrationDate;
   }
 
   @Override
