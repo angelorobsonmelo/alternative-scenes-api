@@ -47,9 +47,8 @@ public class UserAppController {
   /**
    * Return list of users
    *
-   * @return ResponseEntity<Response<UserAppDto>>
+   * @return ResponseEntity<Response<Page<UserAppDto>>>
    */
-
   @GetMapping
   public ResponseEntity<Response<Page<UserAppDto>>> findAll(
     @RequestParam(value = "pag", defaultValue = "0") int pag,
@@ -79,7 +78,7 @@ public class UserAppController {
     log.info("Adding User: {}", userAppSaveDto.toString());
     Response<UserAppDto> response = new Response<>();
     validateUser(userAppSaveDto, result);
-    UserApp userApp = this.convertUserSaveAppDToToUserApp(userAppSaveDto, result);
+    UserApp userApp = this.convertUserSaveAppDToToUserApp(userAppSaveDto);
 
     if (result.hasErrors()) {
       log.error("Error validating user: {}", result.getAllErrors());
@@ -149,7 +148,6 @@ public class UserAppController {
   }
 
 
-
   /**
    * Validate a user, verifying that it is existing and valid on the system.
    *
@@ -166,10 +164,9 @@ public class UserAppController {
    * Convert a User save dto to a entity.
    *
    * @param userAppSaveDto
-   * @param result
    * @return UserApp
    */
-  private UserApp convertUserSaveAppDToToUserApp(UserAppSaveDto userAppSaveDto, BindingResult result) {
+  private UserApp convertUserSaveAppDToToUserApp(UserAppSaveDto userAppSaveDto) {
     UserApp userApp = new UserApp();
     userApp.setName(userAppSaveDto.getName());
     userApp.setEmail(userAppSaveDto.getEmail());
