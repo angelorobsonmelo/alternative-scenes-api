@@ -1,6 +1,6 @@
-INSERT INTO location (id, LOCATION, city_id) VALUES (1, 'Rex Bar', 47);
+INSERT INTO locality (id, locality, city_id) VALUES (1, 'Rex Bar', 47);
 
-INSERT INTO event (id, photo_url, title, description, location_id, user_app_id,
+INSERT INTO event (id, photo_url, title, description, locality_id, user_app_id,
                    status)
 VALUES (1, 'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
         'Lorem Ipsum',

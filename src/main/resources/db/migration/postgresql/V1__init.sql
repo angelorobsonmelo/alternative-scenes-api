@@ -1,24 +1,5 @@
 CREATE SEQUENCE hibernate_sequence START 1;
 
-CREATE TABLE user_app
-(
-  id                BIGSERIAL PRIMARY KEY,
-  name              CHARACTER VARYING           NOT NULL,
-  email             CHARACTER VARYING           NOT NULL,
-  password          CHARACTER VARYING           NOT NULL,
-  profile           CHARACTER VARYING           NOT NULL,
-  image_url         CHARACTER VARYING           NOT NULL,
-  date_birth        DATE                        NOT NULL,
-  registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now()
-);
-
-CREATE TABLE user_device
-(
-  id                BIGSERIAL PRIMARY KEY,
-  user_app_id       INTEGER    NOT NULL,
-  device_id         CHARACTER VARYING           NOT NULL
-);
-
 CREATE TABLE state
 (
   id    BIGSERIAL PRIMARY KEY,
@@ -34,10 +15,35 @@ CREATE TABLE city
   FOREIGN KEY (state_id) REFERENCES state (id)
 );
 
-CREATE TABLE location
+CREATE TABLE user_app
+(
+  id                BIGSERIAL PRIMARY KEY,
+  name              CHARACTER VARYING           NOT NULL,
+  email             CHARACTER VARYING           NOT NULL,
+  password          CHARACTER VARYING           NOT NULL,
+  profile           CHARACTER VARYING           NOT NULL,
+  image_url         CHARACTER VARYING           NOT NULL,
+  phone_number      CHARACTER VARYING           NOT NULL,
+  date_birth        DATE                        NOT NULL,
+  registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  state_id          INTEGER NOT NULL,
+  city_id           INTEGER NOT NULL,
+  FOREIGN KEY (state_id) REFERENCES state (id),
+  FOREIGN KEY (city_id) REFERENCES city (id)
+
+);
+
+CREATE TABLE user_device
+(
+  id                BIGSERIAL PRIMARY KEY,
+  user_app_id       INTEGER    NOT NULL,
+  device_id         CHARACTER VARYING           NOT NULL
+);
+
+CREATE TABLE locality
 (
   id       BIGSERIAL PRIMARY KEY,
-  location CHARACTER VARYING,
+  locality CHARACTER VARYING,
   city_id  INT NOT NULL,
   FOREIGN KEY (city_id) REFERENCES city (id)
 );
@@ -54,10 +60,10 @@ CREATE TABLE event
   photo_url   CHARACTER VARYING NOT NULL,
   title       CHARACTER VARYING NOT NULL,
   description CHARACTER VARYING NOT NULL,
-  location_id INT               NOT NULL,
+  locality_id INT               NOT NULL,
   user_app_id INT               NOT NULL,
   status      INT               NOT NULL,
-  FOREIGN KEY (location_id) REFERENCES LOCATION (id),
+  FOREIGN KEY (locality_id) REFERENCES locality (id),
   FOREIGN KEY (user_app_id) REFERENCES user_app (id)
 );
 
