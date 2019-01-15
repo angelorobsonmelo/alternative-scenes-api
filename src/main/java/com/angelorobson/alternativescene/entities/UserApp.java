@@ -1,5 +1,6 @@
 package com.angelorobson.alternativescene.entities;
 
+import com.angelorobson.alternativescene.enums.GenderEnum;
 import com.angelorobson.alternativescene.enums.ProfileEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import static java.time.LocalDate.*;
+import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Table(name = "user_app")
@@ -27,6 +29,7 @@ public class UserApp implements Serializable {
   private LocalDate dateBirth;
   private LocalDate registrationDate;
   private String imageUrl;
+  private GenderEnum gender;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -103,6 +106,16 @@ public class UserApp implements Serializable {
   @Column(nullable = false)
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
+  }
+
+  @Enumerated(STRING)
+  @Column(nullable = false)
+  public GenderEnum getGender() {
+    return gender;
+  }
+
+  public void setGender(GenderEnum gender) {
+    this.gender = gender;
   }
 
   @PrePersist

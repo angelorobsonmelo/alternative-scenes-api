@@ -28,6 +28,7 @@ CREATE TABLE user_app
   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   state_id          INTEGER NOT NULL,
   city_id           INTEGER NOT NULL,
+  gender            CHARACTER VARYING  NOT NULL,
   FOREIGN KEY (state_id) REFERENCES state (id),
   FOREIGN KEY (city_id) REFERENCES city (id)
 

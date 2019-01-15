@@ -1,7 +1,7 @@
 package com.angelorobson.alternativescene.enums;
 
-public enum ProfileEnum {
+public enum  GenderEnum {
 
-	ROLE_ADMIN,
-	ROLE_USER
+    MALE,
+    FEMALE
 }
