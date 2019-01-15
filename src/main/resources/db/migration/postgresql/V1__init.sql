@@ -12,6 +12,13 @@ CREATE TABLE user_app
   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
 
+CREATE TABLE user_device
+(
+  id                BIGSERIAL PRIMARY KEY,
+  user_app_id       INTEGER    NOT NULL,
+  device_id         CHARACTER VARYING           NOT NULL
+);
+
 CREATE TABLE state
 (
   id    BIGSERIAL PRIMARY KEY,
@@ -73,8 +80,27 @@ CREATE TABLE event_date
 (
   id         BIGSERIAL PRIMARY KEY,
   event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  event_hour CHARACTER VARYING NOT NULL,
+  event_id   INT                         NOT NULL,
+  FOREIGN KEY (event_id) REFERENCES event (id)
+);
+
+CREATE TABLE event_price
+(
+  id         BIGSERIAL PRIMARY KEY,
   event_id   INT                         NOT NULL,
   price_id   INT                         NOT NULL,
+  event_date_id INT                       not null,
   FOREIGN KEY (event_id) REFERENCES event (id),
-  FOREIGN KEY (price_id) REFERENCES price (id)
+  FOREIGN KEY (price_id) REFERENCES price (id),
+  FOREIGN KEY (event_date_id) REFERENCES event_date (id)
+);
+
+CREATE TABLE favorite
+(
+  id            BIGSERIAL PRIMARY KEY,
+  event_id      INT                         NOT NULL,
+  user_app_id   INT                         NOT NULL,
+  FOREIGN KEY (event_id) REFERENCES event (id),
+  FOREIGN KEY (user_app_id) REFERENCES user_app (id)
 );
