@@ -2,6 +2,7 @@ package com.angelorobson.alternativescene.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.EAGER;
@@ -18,6 +19,7 @@ public class Event implements Serializable {
     private Locality locality;
     private UserApp userApp;
     private Boolean status;
+    private List<EventDate> eventDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -80,6 +82,15 @@ public class Event implements Serializable {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    @OneToMany(mappedBy = "event")
+    public List<EventDate> getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(List<EventDate> eventDate) {
+        this.eventDate = eventDate;
     }
 
     @Override

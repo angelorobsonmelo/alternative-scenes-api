@@ -19,8 +19,12 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 public class EventRepositoryImpl implements EventRepositoryQuery {
 
-    @Autowired
     private EntityManager manager;
+
+    @Autowired
+    public EventRepositoryImpl(EntityManager manager) {
+        this.manager = manager;
+    }
 
     @Override
     public Page<Event> findAllByFilter(EventFilter eventFilter, Pageable page) {

@@ -33,7 +33,6 @@ public class City implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     public State getState() {
         return state;
     }
