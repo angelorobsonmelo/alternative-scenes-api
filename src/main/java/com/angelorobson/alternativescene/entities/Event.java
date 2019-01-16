@@ -56,7 +56,7 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = EAGER)
     public Locality getLocality() {
         return locality;
     }

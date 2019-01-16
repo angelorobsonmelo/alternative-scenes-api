@@ -3,6 +3,7 @@ package com.angelorobson.alternativescene.entities;
 import com.angelorobson.alternativescene.enums.GenderEnum;
 import com.angelorobson.alternativescene.enums.ProfileEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -60,6 +61,7 @@ public class UserApp implements Serializable {
   }
 
   @Column(nullable = false)
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
