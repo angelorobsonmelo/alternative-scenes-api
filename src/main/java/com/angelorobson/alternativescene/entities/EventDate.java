@@ -16,6 +16,7 @@ public class EventDate implements Serializable {
     private LocalDate eventDate;
     private String eventHour;
     private Event event;
+    private PriceDate priceDate;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -53,6 +54,14 @@ public class EventDate implements Serializable {
         this.event = event;
     }
 
+    @OneToOne(mappedBy = "eventDate")
+    public PriceDate getPriceDate() {
+        return priceDate;
+    }
+
+    public void setPriceDate(PriceDate priceDate) {
+        this.priceDate = priceDate;
+    }
 
     @Override
     public boolean equals(Object o) {

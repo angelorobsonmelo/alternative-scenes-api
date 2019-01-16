@@ -77,12 +77,6 @@ CREATE TABLE event_category
   FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
-CREATE TABLE price
-(
-  id    BIGSERIAL PRIMARY KEY,
-  price DOUBLE PRECISION NOT NULL
-);
-
 CREATE TABLE event_date
 (
   id         BIGSERIAL PRIMARY KEY,
@@ -92,14 +86,11 @@ CREATE TABLE event_date
   FOREIGN KEY (event_id) REFERENCES event (id)
 );
 
-CREATE TABLE event_price
+CREATE TABLE price_date
 (
   id         BIGSERIAL PRIMARY KEY,
-  event_id   INT                         NOT NULL,
-  price_id   INT                         NOT NULL,
-  event_date_id INT                       not null,
-  FOREIGN KEY (event_id) REFERENCES event (id),
-  FOREIGN KEY (price_id) REFERENCES price (id),
+  price      double  precision NOT NULL,
+  event_date_id INT            NOT NULL,
   FOREIGN KEY (event_date_id) REFERENCES event_date (id)
 );
 

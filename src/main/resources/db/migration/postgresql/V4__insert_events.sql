@@ -20,10 +20,11 @@ INSERT INTO category (id, category) VALUES (2, 'Festival');
 INSERT INTO event_category (event_id, category_id) VALUES (1, 1);
 INSERT INTO event_category (event_id, category_id) VALUES (2, 1);
 
-INSERT INTO price (id, price) VALUES (1, 10.00);
-
 INSERT INTO event_date (id, event_date, event_hour, event_id) VALUES (1, '2018-05-06', '19:00HS', 1);
-INSERT INTO event_date (id, event_date, event_hour, event_id) VALUES (2, '2018-03-01', '20:00HS', 2);
 
-INSERT INTO event_price (id, event_id, price_id, event_date_id) VALUES (1, 1, 1, 1);
-INSERT INTO event_price (id, event_id, price_id, event_date_id) VALUES (2, 2, 1, 2);
+INSERT INTO event_date (id, event_date, event_hour, event_id) VALUES (2, '2018-03-01', '20:00HS', 2);
+INSERT INTO event_date (id, event_date, event_hour, event_id) VALUES (3, '2018-07-01', '17:00HS', 2);
+
+INSERT INTO price_date (id, price, event_date_id) VALUES (1, 10.00, 1);
+INSERT INTO price_date (id, price, event_date_id) VALUES (2, 25.00, 2);
+INSERT INTO price_date (id, price, event_date_id) VALUES (3, 40.00, 3);
