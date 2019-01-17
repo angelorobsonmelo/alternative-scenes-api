@@ -20,7 +20,7 @@ import static javax.persistence.EnumType.STRING;
 @Table(name = "user_app")
 public class UserApp implements Serializable {
 
-  private static final long serialVersionUID = -5754246207015712518L;
+  private static final long serialVersionUID = -6760436428804236349L;
 
   private Long id;
   private String name;

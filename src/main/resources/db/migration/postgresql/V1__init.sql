@@ -64,18 +64,12 @@ CREATE TABLE event
   locality_id INT               NOT NULL,
   user_app_id INT               NOT NULL,
   status      INT               NOT NULL,
+  category_id INT               NOT NULL,
   FOREIGN KEY (locality_id) REFERENCES locality (id),
-  FOREIGN KEY (user_app_id) REFERENCES user_app (id)
-);
-
-CREATE TABLE event_category
-(
-  id          BIGSERIAL PRIMARY KEY,
-  event_id    INT NOT NULL,
-  category_id INT NOT NULL,
-  FOREIGN KEY (event_id) REFERENCES event (id),
+  FOREIGN KEY (user_app_id) REFERENCES user_app (id),
   FOREIGN KEY (category_id) REFERENCES category (id)
 );
+
 
 CREATE TABLE event_date
 (

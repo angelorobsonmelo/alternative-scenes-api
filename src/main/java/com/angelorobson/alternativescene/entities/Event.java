@@ -19,7 +19,8 @@ public class Event implements Serializable {
     private Locality locality;
     private UserApp userApp;
     private Boolean status;
-    private List<EventDate> eventDate;
+    private List<EventDate> eventDates;
+    private Category category;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -84,13 +85,23 @@ public class Event implements Serializable {
         this.status = status;
     }
 
+
     @OneToMany(mappedBy = "event")
-    public List<EventDate> getEventDate() {
-        return eventDate;
+    public List<EventDate> getEventDates() {
+        return eventDates;
     }
 
-    public void setEventDate(List<EventDate> eventDate) {
-        this.eventDate = eventDate;
+    public void setEventDates(List<EventDate> eventDates) {
+        this.eventDates = eventDates;
+    }
+
+    @ManyToOne
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
@@ -104,24 +115,12 @@ public class Event implements Serializable {
                 Objects.equals(description, event.description) &&
                 Objects.equals(locality, event.locality) &&
                 Objects.equals(userApp, event.userApp) &&
-                Objects.equals(status, event.status);
+                Objects.equals(status, event.status) &&
+                Objects.equals(eventDates, event.eventDates);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, photoUrl, title, description, locality, userApp, status);
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", photoUrl='" + photoUrl + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", locality=" + locality +
-                ", userApp=" + userApp +
-                ", status=" + status +
-                '}';
+        return Objects.hash(id, photoUrl, title, description, locality, userApp, status, eventDates);
     }
 }
