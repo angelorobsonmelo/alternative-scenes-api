@@ -19,7 +19,7 @@ public class EventDate implements Serializable {
     private PriceDate priceDate;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
     }
@@ -71,12 +71,13 @@ public class EventDate implements Serializable {
         return Objects.equals(id, eventDate1.id) &&
                 Objects.equals(eventDate, eventDate1.eventDate) &&
                 Objects.equals(eventHour, eventDate1.eventHour) &&
-                Objects.equals(event, eventDate1.event);
+                Objects.equals(event, eventDate1.event) &&
+                Objects.equals(priceDate, eventDate1.priceDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, eventDate, eventHour, event);
+        return Objects.hash(id, eventDate, eventHour, event, priceDate);
     }
 
     @Override
@@ -86,6 +87,7 @@ public class EventDate implements Serializable {
                 ", eventDate=" + eventDate +
                 ", eventHour='" + eventHour + '\'' +
                 ", event=" + event +
+                ", priceDate=" + priceDate +
                 '}';
     }
 }

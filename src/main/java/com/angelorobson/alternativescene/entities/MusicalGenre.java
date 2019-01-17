@@ -1,5 +1,6 @@
 package com.angelorobson.alternativescene.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -7,14 +8,16 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
-public class Category implements Serializable {
+public class MusicalGenre implements Serializable {
 
-    private static final long serialVersionUID = -8600634840157533556L;
+    private static final long serialVersionUID = 74785535352906538L;
 
     private Long id;
-    private String category;
+    private String name;
     private List<Event> events;
 
     @Id
@@ -27,15 +30,15 @@ public class Category implements Serializable {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
+    public String getName() {
+        return name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @OneToMany(mappedBy = "category")
+    @ManyToMany(cascade = ALL, fetch = LAZY, mappedBy = "musicalGenres")
     @JsonIgnore
     public List<Event> getEvents() {
         return events;
@@ -49,22 +52,22 @@ public class Category implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Category category1 = (Category) o;
-        return Objects.equals(id, category1.id) &&
-                Objects.equals(category, category1.category) &&
-                Objects.equals(events, category1.events);
+        MusicalGenre that = (MusicalGenre) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(events, that.events);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, category, events);
+        return Objects.hash(id, name, events);
     }
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "MusicalGenre{" +
                 "id=" + id +
-                ", category='" + category + '\'' +
+                ", name='" + name + '\'' +
                 ", events=" + events +
                 '}';
     }

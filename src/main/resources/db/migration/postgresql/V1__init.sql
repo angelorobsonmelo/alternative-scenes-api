@@ -96,3 +96,18 @@ CREATE TABLE favorite
   FOREIGN KEY (event_id) REFERENCES event (id),
   FOREIGN KEY (user_app_id) REFERENCES user_app (id)
 );
+
+CREATE TABLE musical_genre
+(
+  id            BIGSERIAL PRIMARY KEY,
+  name      character varying  NOT NULL
+);
+
+CREATE TABLE musical_genre_event
+(
+  id                BIGSERIAL PRIMARY KEY,
+  musical_genre_id int not null,
+  event_id          int  NOT NULL,
+  FOREIGN KEY (musical_genre_id) REFERENCES musical_genre (id),
+  FOREIGN KEY (event_id) REFERENCES event (id)
+);

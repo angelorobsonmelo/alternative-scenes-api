@@ -21,6 +21,7 @@ public class Event implements Serializable {
     private Boolean status;
     private List<EventDate> eventDates;
     private Category category;
+    private List<MusicalGenre> musicalGenres;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -104,6 +105,18 @@ public class Event implements Serializable {
         this.category = category;
     }
 
+    @ManyToMany(fetch = EAGER)
+    @JoinTable(name = "musical_genre_event",
+            joinColumns = {@JoinColumn(name = "event_id", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "musical_genre_id", nullable = false)})
+    public List<MusicalGenre> getMusicalGenres() {
+        return musicalGenres;
+    }
+
+    public void setMusicalGenres(List<MusicalGenre> musicalGenres) {
+        this.musicalGenres = musicalGenres;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,11 +129,29 @@ public class Event implements Serializable {
                 Objects.equals(locality, event.locality) &&
                 Objects.equals(userApp, event.userApp) &&
                 Objects.equals(status, event.status) &&
-                Objects.equals(eventDates, event.eventDates);
+                Objects.equals(eventDates, event.eventDates) &&
+                Objects.equals(category, event.category) &&
+                Objects.equals(musicalGenres, event.musicalGenres);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, photoUrl, title, description, locality, userApp, status, eventDates);
+        return Objects.hash(id, photoUrl, title, description, locality, userApp, status, eventDates, category, musicalGenres);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", locality=" + locality +
+                ", userApp=" + userApp +
+                ", status=" + status +
+                ", eventDates=" + eventDates +
+                ", category=" + category +
+                ", musicalGenres=" + musicalGenres +
+                '}';
     }
 }
