@@ -1,5 +1,6 @@
 package com.angelorobson.alternativescene.services.impl;
 
+import com.angelorobson.alternativescene.converters.Converters;
 import com.angelorobson.alternativescene.dtos.UserAppDto;
 import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.repositories.UserAppRepository;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.angelorobson.alternativescene.converters.Converters.*;
+
 @Service
 public class UserAppAppServiceImpl implements UserAppService {
 
@@ -26,7 +29,7 @@ public class UserAppAppServiceImpl implements UserAppService {
   public UserAppDto persist(UserApp userApp) {
     log.info("Persisting a UserApp {}", userApp);
     UserApp userAppReturned = userAppRepository.save(userApp);
-    return convertUserAppToDto(userAppReturned);
+    return convertUserAppEntityToDto(userAppReturned);
   }
 
   @Override
@@ -46,14 +49,14 @@ public class UserAppAppServiceImpl implements UserAppService {
     log.info("Get all users {}", pageRequest);
     Page<UserApp> userAppPage = userAppRepository.findAll(pageRequest);
 
-    return userAppPage.map(this::convertUserAppToDto);
+    return userAppPage.map(Converters::convertUserAppEntityToDto);
   }
 
   @Override
   public UserAppDto edit(UserApp userApp) {
     log.info("Editing a UserApp {}", userApp);
     UserApp userAppReturned = userAppRepository.save(userApp);
-    return convertUserAppToDto(userAppReturned);
+    return convertUserAppEntityToDto(userAppReturned);
   }
 
     @Override
@@ -62,14 +65,4 @@ public class UserAppAppServiceImpl implements UserAppService {
         userAppRepository.delete(id);
     }
 
-    private UserAppDto convertUserAppToDto(UserApp userApp) {
-    UserAppDto userAppDto = new UserAppDto();
-    userAppDto.setId(userApp.getId());
-    userAppDto.setName(userApp.getName());
-    userAppDto.setImageUrl(userApp.getImageUrl());
-    userAppDto.setEmail(userApp.getEmail());
-    userAppDto.setRegistrationDate(userApp.getRegistrationDate());
-
-    return userAppDto;
-  }
 }
