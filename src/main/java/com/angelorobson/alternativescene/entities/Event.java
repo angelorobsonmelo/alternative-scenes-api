@@ -2,9 +2,11 @@ package com.angelorobson.alternativescene.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import static java.time.LocalDate.now;
 import static javax.persistence.FetchType.EAGER;
 
 @Entity
@@ -22,6 +24,7 @@ public class Event implements Serializable {
     private List<EventDate> eventDates;
     private Category category;
     private List<MusicalGenre> musicalGenres;
+    private LocalDate registrationDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -115,6 +118,20 @@ public class Event implements Serializable {
 
     public void setMusicalGenres(List<MusicalGenre> musicalGenres) {
         this.musicalGenres = musicalGenres;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        final LocalDate now = now();
+        this.registrationDate = now;
     }
 
     @Override

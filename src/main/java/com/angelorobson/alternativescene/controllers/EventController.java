@@ -1,7 +1,7 @@
 package com.angelorobson.alternativescene.controllers;
 
 
-import com.angelorobson.alternativescene.entities.Event;
+import com.angelorobson.alternativescene.dtos.EventDto;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.EventService;
@@ -26,17 +26,17 @@ public class EventController {
     }
 
     @PostMapping(value = "/filter")
-    public ResponseEntity<Response<Page<Event>>> findAllByFilter(
+    public ResponseEntity<Response<Page<EventDto>>> findAllByFilter(
             @RequestParam(value = "pag", defaultValue = "0") int pag,
             @RequestParam(value = "ord", defaultValue = "id") String ord,
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage,
             @RequestBody EventFilter eventFilter) {
         eventFilter.setStatus(1);
-        Response<Page<Event>> response = new Response<>();
+        Response<Page<EventDto>> response = new Response<>();
 
         Pageable pageRequest = new PageRequest(pag, Integer.valueOf(perPage), valueOf(dir), ord);
-        Page<Event> eventsReturned = this.eventService.findAllByFilter(eventFilter, pageRequest);
+        Page<EventDto> eventsReturned = this.eventService.findAllByFilter(eventFilter, pageRequest);
 
         response.setData(eventsReturned);
         return ResponseEntity.ok(response);

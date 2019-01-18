@@ -65,6 +65,7 @@ CREATE TABLE event
   user_app_id INT               NOT NULL,
   status      INT               NOT NULL,
   category_id INT               NOT NULL,
+  registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   FOREIGN KEY (locality_id) REFERENCES locality (id),
   FOREIGN KEY (user_app_id) REFERENCES user_app (id),
   FOREIGN KEY (category_id) REFERENCES category (id)
