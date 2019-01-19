@@ -53,7 +53,7 @@ public class EventController {
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage,
             @RequestBody EventFilter eventFilter) {
-        eventFilter.setStatus(1);
+        eventFilter.setStatus(true);
         Response<Page<EventDto>> response = new Response<>();
 
         Pageable pageRequest = new PageRequest(pag, Integer.valueOf(perPage), valueOf(dir), ord);

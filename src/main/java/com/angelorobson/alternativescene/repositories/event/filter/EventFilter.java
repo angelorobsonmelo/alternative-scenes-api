@@ -6,13 +6,13 @@ public class EventFilter implements Serializable {
 
     private static final long serialVersionUID = -6209219512751878213L;
 
-    private Integer status;
+    private Boolean status;
 
-    public Integer getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 }

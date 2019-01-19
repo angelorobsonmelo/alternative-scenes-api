@@ -63,7 +63,7 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = EAGER, cascade = CascadeType.ALL)
     public Locality getLocality() {
         return locality;
     }

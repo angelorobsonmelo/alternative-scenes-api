@@ -63,7 +63,7 @@ CREATE TABLE event
   description CHARACTER VARYING NOT NULL,
   locality_id INT               NOT NULL,
   user_app_id INT               NOT NULL,
-  status      INT               NOT NULL,
+  status      BOOLEAN           NOT NULL,
   category_id INT               NOT NULL,
   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   FOREIGN KEY (locality_id) REFERENCES locality (id),
