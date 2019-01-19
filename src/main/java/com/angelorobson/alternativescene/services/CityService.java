@@ -12,4 +12,6 @@ public interface CityService {
      * @return City
      */
     List<City> findAllByState(Long id);
+
+    City findCityById(Long id);
 }

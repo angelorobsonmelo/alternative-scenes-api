@@ -23,4 +23,9 @@ public class CityServiceImpl implements CityService {
         log.info("Searching all cyties by state");
         return cityRepository.findAllByStateId(id);
     }
+
+    @Override
+    public City findCityById(Long id) {
+        return cityRepository.findOne(id);
+    }
 }

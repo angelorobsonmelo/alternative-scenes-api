@@ -10,4 +10,6 @@ public interface EventService {
 
     Page<EventDto> findAllByFilter(EventFilter eventFilter, Pageable pageable);
 
+    Event save(Event event);
+
 }
