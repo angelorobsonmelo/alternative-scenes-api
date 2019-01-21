@@ -71,15 +71,6 @@ public class EventController {
 
         event = this.eventService.save(event);
 
-        List<EventDate> eventDates = convertEventDatesListToEntity(eventSaveDto.getEventDates(), event);
-//        eventDates = eventDateService.save(eventDates);
-
-//        eventDates.forEach(item -> {
-//            PriceDate priceDate = new PriceDate();
-//            priceDate.setEventDate(item);
-//            this.priceDateService.save(priceDate);
-//        });
-
         response.setData(convertEventEntityToDto(event));
         return ResponseEntity.ok(response);
     }
@@ -96,12 +87,8 @@ public class EventController {
         State state = new State();
         state.setId(eventSaveDto.getStateId());
 
-//        locality.setCity(city);
-//        city.setState(state);
-
         City city = new City();
         city.setId(eventSaveDto.getCityId());
-//        city.setState(state);
 
         Locality locality = new Locality();
         locality.setCity(city);
@@ -118,6 +105,10 @@ public class EventController {
         event.setMusicalGenres(musicalGenres);
         event.setUserApp(userApp);
         event.setPhotoUrl("url da foto do evento");
+
+        List<EventDate> eventDates = convertEventDatesListToEntity(eventSaveDto.getEventDates(), event);
+
+        event.setEventDates(eventDates);
 
         return event;
     }
@@ -146,6 +137,25 @@ public class EventController {
             eventDate.setEventHour(eventDateDto.getEventHour());
             eventDate.setPriceDate(priceDate);
             eventDate.setEvent(event);
+            priceDate.setEventDate(eventDate);
+
+            eventDates.add(eventDate);
+
+        });
+
+        return eventDates;
+    }
+
+    private List<EventDate> convertEventDatesListToEntity(List<DateEventSaveDto> eventDateDtos) {
+        List<EventDate> eventDates = new ArrayList<>();
+
+        eventDateDtos.forEach(eventDateDto -> {
+            EventDate eventDate = new EventDate();
+            PriceDate priceDate = new PriceDate();
+            priceDate.setPrice(eventDateDto.getPriceDate());
+            eventDate.setEventDate(eventDateDto.getEventDate());
+            eventDate.setEventHour(eventDateDto.getEventHour());
+            eventDate.setPriceDate(priceDate);
 
             eventDates.add(eventDate);
 

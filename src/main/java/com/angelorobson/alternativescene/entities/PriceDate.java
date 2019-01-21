@@ -36,7 +36,7 @@ public class PriceDate implements Serializable {
     }
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     public EventDate getEventDate() {
         return eventDate;
     }

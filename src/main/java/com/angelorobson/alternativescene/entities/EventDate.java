@@ -45,7 +45,8 @@ public class EventDate implements Serializable {
     }
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="event_id")
     public Event getEvent() {
         return event;
     }
@@ -54,7 +55,7 @@ public class EventDate implements Serializable {
         this.event = event;
     }
 
-    @OneToOne(mappedBy = "eventDate", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "eventDate")
     public PriceDate getPriceDate() {
         return priceDate;
     }
