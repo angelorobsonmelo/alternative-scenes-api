@@ -30,7 +30,7 @@ public class City implements Serializable {
         this.city = city;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     public State getState() {
         return state;
     }

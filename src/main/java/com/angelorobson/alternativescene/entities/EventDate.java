@@ -44,8 +44,8 @@ public class EventDate implements Serializable {
         this.eventHour = eventHour;
     }
 
-    @ManyToOne
     @JsonIgnore
+    @ManyToOne
     public Event getEvent() {
         return event;
     }
@@ -54,7 +54,7 @@ public class EventDate implements Serializable {
         this.event = event;
     }
 
-    @OneToOne(mappedBy = "eventDate")
+    @OneToOne(mappedBy = "eventDate", cascade = CascadeType.ALL)
     public PriceDate getPriceDate() {
         return priceDate;
     }
