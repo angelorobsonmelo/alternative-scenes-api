@@ -63,7 +63,7 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @ManyToOne(fetch = EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     public Locality getLocality() {
         return locality;
     }
@@ -72,7 +72,7 @@ public class Event implements Serializable {
         this.locality = locality;
     }
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne
     public UserApp getUserApp() {
         return userApp;
     }
@@ -108,7 +108,7 @@ public class Event implements Serializable {
         this.category = category;
     }
 
-    @ManyToMany(fetch = EAGER)
+    @ManyToMany
     @JoinTable(name = "musical_genre_event",
             joinColumns = {@JoinColumn(name = "event_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "musical_genre_id", nullable = false)})
@@ -148,27 +148,12 @@ public class Event implements Serializable {
                 Objects.equals(status, event.status) &&
                 Objects.equals(eventDates, event.eventDates) &&
                 Objects.equals(category, event.category) &&
-                Objects.equals(musicalGenres, event.musicalGenres);
+                Objects.equals(musicalGenres, event.musicalGenres) &&
+                Objects.equals(registrationDate, event.registrationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, photoUrl, title, description, locality, userApp, status, eventDates, category, musicalGenres);
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", photoUrl='" + photoUrl + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", locality=" + locality +
-                ", userApp=" + userApp +
-                ", status=" + status +
-                ", eventDates=" + eventDates +
-                ", category=" + category +
-                ", musicalGenres=" + musicalGenres +
-                '}';
+        return Objects.hash(id, photoUrl, title, description, locality, userApp, status, eventDates, category, musicalGenres, registrationDate);
     }
 }

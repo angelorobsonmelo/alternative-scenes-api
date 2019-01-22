@@ -46,7 +46,6 @@ public class EventDate implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="event_id")
     public Event getEvent() {
         return event;
     }

@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class EventServiceImpl implements EventService {
 
@@ -32,6 +34,20 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event save(Event event) {
         return eventRepository.save(event);
+    }
+
+    @Override
+    public Optional<EventDto> findOne(Long id) {
+        Event event = eventRepository.findOne(id);
+        EventDto eventDto = Converters.convertEventEntityToDto(event);
+        return Optional.of(eventDto) ;
+    }
+
+    @Override
+    public Optional<EventDto> findByIdAndUserAppIdAndStatus(Long id, Long userId, Boolean status) {
+        Event event = eventRepository.findByIdAndUserAppIdAndStatus(id, userId, status);
+        EventDto eventDto = Converters.convertEventEntityToDto(event);
+        return Optional.of(eventDto) ;
     }
 
 }

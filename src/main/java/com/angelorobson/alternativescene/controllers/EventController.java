@@ -2,14 +2,12 @@ package com.angelorobson.alternativescene.controllers;
 
 
 import com.angelorobson.alternativescene.converters.Converters;
-import com.angelorobson.alternativescene.dtos.DateEventSaveDto;
-import com.angelorobson.alternativescene.dtos.EventDateDto;
 import com.angelorobson.alternativescene.dtos.EventDto;
 import com.angelorobson.alternativescene.dtos.EventSaveDto;
-import com.angelorobson.alternativescene.entities.*;
+import com.angelorobson.alternativescene.entities.Event;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
-import com.angelorobson.alternativescene.services.*;
+import com.angelorobson.alternativescene.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,13 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-import static com.angelorobson.alternativescene.converters.Converters.convertEventEntityToDto;
 import static org.springframework.data.domain.Sort.Direction.valueOf;
 
 @RestController
@@ -66,10 +59,36 @@ public class EventController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        event = this.eventService.save(event);
+        Long id = this.eventService.save(event).getId();
 
-        response.setData(convertEventEntityToDto(event));
+        response.setData(eventService.findOne(id).get());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "{id}")
+    public ResponseEntity<Response<EventDto>> findOne(@PathVariable("id") Long id) {
+        Response<EventDto> response = new Response<>();
+
+        Optional<EventDto> eventDtoReturned = this.eventService.findOne(id);
+        if (eventDtoReturned.isPresent()) {
+            response.setData(eventDtoReturned.get());
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(value = "/getBy/{id}/{userId}/{status}")
+    public ResponseEntity<Response<EventDto>> findOne(@PathVariable("id") Long id, @PathVariable("userId") Long userId, @PathVariable("status") Boolean status) {
+        Response<EventDto> response = new Response<>();
+
+        Optional<EventDto> eventDtoReturned = this.eventService.findByIdAndUserAppIdAndStatus(id, userId, status);
+        if (eventDtoReturned.isPresent()) {
+            response.setData(eventDtoReturned.get());
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 }
