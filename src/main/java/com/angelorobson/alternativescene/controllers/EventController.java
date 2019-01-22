@@ -13,11 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+import static com.angelorobson.alternativescene.converters.Converters.*;
 import static org.springframework.data.domain.Sort.Direction.valueOf;
 
 @RestController
@@ -52,16 +54,15 @@ public class EventController {
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
                                                    BindingResult result) {
         Response<EventDto> response = new Response<>();
-        Event event = Converters.converterDtoParaLancamento(eventSaveDto);
+        Event event = converterDtoParaLancamento(eventSaveDto);
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(response);
         }
 
-        Long id = this.eventService.save(event).getId();
-
-        response.setData(eventService.findOne(id).get());
+        event = this.eventService.save(event);
+        response.setData(convertEventEntityToDto(event));
         return ResponseEntity.ok(response);
     }
 
@@ -79,7 +80,9 @@ public class EventController {
     }
 
     @GetMapping(value = "/getBy/{id}/{userId}/{status}")
-    public ResponseEntity<Response<EventDto>> findOne(@PathVariable("id") Long id, @PathVariable("userId") Long userId, @PathVariable("status") Boolean status) {
+    public ResponseEntity<Response<EventDto>> findOne(@PathVariable("id") Long id,
+                                                      @PathVariable("userId") Long userId,
+                                                      @PathVariable("status") Boolean status) {
         Response<EventDto> response = new Response<>();
 
         Optional<EventDto> eventDtoReturned = this.eventService.findByIdAndUserAppIdAndStatus(id, userId, status);
@@ -89,6 +92,21 @@ public class EventController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Response<String>> remove(@PathVariable("id") Long id) {
+        Response<String> response = new Response<>();
+        Optional<EventDto> eventDtoReturned = this.eventService.findOne(id);
+
+        if (!eventDtoReturned.isPresent()) {
+            response.getErrors().add("Error removing. Record not found for id " + id);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        this.eventService.remove(id);
+        return ResponseEntity.ok(new Response<>());
     }
 
 }

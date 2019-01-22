@@ -50,4 +50,9 @@ public class EventServiceImpl implements EventService {
         return Optional.of(eventDto) ;
     }
 
+    @Override
+    public void remove(Long id) {
+        eventRepository.delete(id);
+    }
+
 }

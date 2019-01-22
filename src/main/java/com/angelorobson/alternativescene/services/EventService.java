@@ -18,6 +18,5 @@ public interface EventService {
 
     Optional<EventDto> findByIdAndUserAppIdAndStatus(Long id, Long userId, Boolean status);
 
-
-
+    void remove(Long id);
 }
