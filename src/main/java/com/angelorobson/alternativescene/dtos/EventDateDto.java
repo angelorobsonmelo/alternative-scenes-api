@@ -4,9 +4,18 @@ import java.time.LocalDate;
 
 public class EventDateDto {
 
+    private Long id;
     private LocalDate date;
     private String hour;
     private Double priceDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public LocalDate getDate() {
         return date;

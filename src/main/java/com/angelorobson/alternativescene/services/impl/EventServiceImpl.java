@@ -44,6 +44,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Optional<Event> findEventBy(Long id) {
+        Event event = eventRepository.findOne(id);
+        return Optional.of(event);
+    }
+
+    @Override
     public Optional<EventDto> findByIdAndUserAppIdAndStatus(Long id, Long userId, Boolean status) {
         Event event = eventRepository.findByIdAndUserAppIdAndStatus(id, userId, status);
         EventDto eventDto = Converters.convertEventEntityToDto(event);

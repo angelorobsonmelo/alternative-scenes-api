@@ -46,6 +46,7 @@ public class Converters {
     private static EventDateDto convertEventDateEntityToDto(EventDate eventDate) {
         EventDateDto eventDateDto = new EventDateDto();
 
+        eventDateDto.setId(eventDate.getId());
         eventDateDto.setDate(eventDate.getEventDate());
         eventDateDto.setPriceDate(eventDate.getPriceDate().getPrice());
         eventDateDto.setHour(eventDate.getEventHour());
@@ -56,6 +57,7 @@ public class Converters {
     private static MusicalGenreDto convertMusicalGenreDtoEntityToDto(MusicalGenre musicalGenre) {
         MusicalGenreDto musicalGenreDto = new MusicalGenreDto();
 
+        musicalGenreDto.setId(musicalGenre.getId());
         musicalGenreDto.setName(musicalGenre.getName());
 
         return musicalGenreDto;
