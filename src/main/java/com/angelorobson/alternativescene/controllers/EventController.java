@@ -1,6 +1,7 @@
 package com.angelorobson.alternativescene.controllers;
 
 
+import com.angelorobson.alternativescene.converters.Converters;
 import com.angelorobson.alternativescene.dtos.DateEventSaveDto;
 import com.angelorobson.alternativescene.dtos.EventDateDto;
 import com.angelorobson.alternativescene.dtos.EventDto;
@@ -31,14 +32,10 @@ import static org.springframework.data.domain.Sort.Direction.valueOf;
 public class EventController {
 
     private EventService eventService;
-    private EventDateService eventDateService;
-    private PriceDateService priceDateService;
 
     @Autowired
-    public EventController(EventService eventService, EventDateService eventDateService, PriceDateService priceDateService) {
+    public EventController(EventService eventService) {
         this.eventService = eventService;
-        this.eventDateService = eventDateService;
-        this.priceDateService = priceDateService;
     }
 
     @PostMapping(value = "/filter")
@@ -60,9 +57,9 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
-                                                   BindingResult result) throws ParseException {
+                                                   BindingResult result) {
         Response<EventDto> response = new Response<>();
-        Event event = this.converterDtoParaLancamento(eventSaveDto, result);
+        Event event = Converters.converterDtoParaLancamento(eventSaveDto);
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
@@ -74,95 +71,5 @@ public class EventController {
         response.setData(convertEventEntityToDto(event));
         return ResponseEntity.ok(response);
     }
-
-    private Event converterDtoParaLancamento(EventSaveDto eventSaveDto, BindingResult result) throws ParseException {
-        List<MusicalGenre> musicalGenres = convertMusicalGenresIdsToEntity(eventSaveDto.getMusicalGenres());
-
-        UserApp userApp = new UserApp();
-        userApp.setId(eventSaveDto.getUserAppId());
-
-        Category category = new Category();
-        category.setId(eventSaveDto.getCategoryId());
-
-        State state = new State();
-        state.setId(eventSaveDto.getStateId());
-
-        City city = new City();
-        city.setId(eventSaveDto.getCityId());
-
-        Locality locality = new Locality();
-        locality.setCity(city);
-        locality.getCity().setState(state);
-        locality.setLocality(eventSaveDto.getLocality());
-
-        Event event = new Event();
-        event.setTitle(eventSaveDto.getTitle());
-        event.setDescription(eventSaveDto.getDescription());
-        event.setLocality(locality);
-        event.setStatus(false);
-        event.setCategory(category);
-        event.setLocality(locality);
-        event.setMusicalGenres(musicalGenres);
-        event.setUserApp(userApp);
-        event.setPhotoUrl("url da foto do evento");
-
-        List<EventDate> eventDates = convertEventDatesListToEntity(eventSaveDto.getEventDates(), event);
-
-        event.setEventDates(eventDates);
-
-        return event;
-    }
-
-    private List<MusicalGenre> convertMusicalGenresIdsToEntity(List<Long> musicalGenreIds) {
-        List<MusicalGenre> musicalGenres = new ArrayList<>();
-
-        musicalGenreIds.forEach(id -> {
-            MusicalGenre MusicalGenre = new MusicalGenre();
-            MusicalGenre.setId(id);
-
-            musicalGenres.add(MusicalGenre);
-        });
-
-        return musicalGenres;
-    }
-
-    private List<EventDate> convertEventDatesListToEntity(List<DateEventSaveDto> eventDateDtos, Event event) {
-        List<EventDate> eventDates = new ArrayList<>();
-
-        eventDateDtos.forEach(eventDateDto -> {
-            EventDate eventDate = new EventDate();
-            PriceDate priceDate = new PriceDate();
-            priceDate.setPrice(eventDateDto.getPriceDate());
-            eventDate.setEventDate(eventDateDto.getEventDate());
-            eventDate.setEventHour(eventDateDto.getEventHour());
-            eventDate.setPriceDate(priceDate);
-            eventDate.setEvent(event);
-            priceDate.setEventDate(eventDate);
-
-            eventDates.add(eventDate);
-
-        });
-
-        return eventDates;
-    }
-
-    private List<EventDate> convertEventDatesListToEntity(List<DateEventSaveDto> eventDateDtos) {
-        List<EventDate> eventDates = new ArrayList<>();
-
-        eventDateDtos.forEach(eventDateDto -> {
-            EventDate eventDate = new EventDate();
-            PriceDate priceDate = new PriceDate();
-            priceDate.setPrice(eventDateDto.getPriceDate());
-            eventDate.setEventDate(eventDateDto.getEventDate());
-            eventDate.setEventHour(eventDateDto.getEventHour());
-            eventDate.setPriceDate(priceDate);
-
-            eventDates.add(eventDate);
-
-        });
-
-        return eventDates;
-    }
-
 
 }
