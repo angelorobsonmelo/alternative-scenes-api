@@ -113,7 +113,7 @@ public class EventController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Response<EventDto>> update(@PathVariable("id") Long id,
-                                                       @RequestBody EventSaveDto eventSaveDto, BindingResult result) {
+                                                     @RequestBody EventSaveDto eventSaveDto, BindingResult result) {
         Response<EventDto> response = new Response<>();
         eventSaveDto.setId(Optional.of(id));
 
@@ -132,9 +132,7 @@ public class EventController {
                 Event event1 = Converters.converterEventSaveDtoToEntity(eventSaveDto);
                 event1.setId(eventReturned.get().getId());
                 event1.setRegistrationDate(eventReturned.get().getRegistrationDate());
-//
-//                event1.setId(event.getId());
-//                event1.setLocality(event.getLocality());
+
                 return event1;
             } else {
                 result.addError(new ObjectError("user", "User not found."));

@@ -63,7 +63,7 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     public Locality getLocality() {
         return locality;
     }
@@ -90,7 +90,7 @@ public class Event implements Serializable {
     }
 
 
-    @OneToMany(mappedBy = "event", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "event", orphanRemoval = true, fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     public List<EventDate> getEventDates() {
         return eventDates;
     }

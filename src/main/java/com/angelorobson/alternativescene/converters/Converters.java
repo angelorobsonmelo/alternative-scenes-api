@@ -125,7 +125,6 @@ public class Converters {
         event.setLocality(locality);
         event.setStatus(false);
         event.setCategory(category);
-        event.setLocality(locality);
         event.setMusicalGenres(musicalGenres);
         event.setUserApp(userApp);
         event.setPhotoUrl("a url da foto vai ser pega aqui no back-end");
@@ -161,6 +160,25 @@ public class Converters {
             eventDate.setEventHour(eventDateDto.getHour());
             eventDate.setPriceDate(priceDate);
             eventDate.setEvent(event);
+            priceDate.setEventDate(eventDate);
+
+            eventDates.add(eventDate);
+
+        });
+
+        return eventDates;
+    }
+
+    public static List<EventDate> convertEventDatesListToEntity(List<DateEventSaveDto> eventDateDtos) {
+        List<EventDate> eventDates = new ArrayList<>();
+
+        eventDateDtos.forEach(eventDateDto -> {
+            EventDate eventDate = new EventDate();
+            PriceDate priceDate = new PriceDate();
+            priceDate.setPrice(eventDateDto.getPrice());
+            eventDate.setDate(eventDateDto.getDate());
+            eventDate.setEventHour(eventDateDto.getHour());
+            eventDate.setPriceDate(priceDate);
             priceDate.setEventDate(eventDate);
 
             eventDates.add(eventDate);
