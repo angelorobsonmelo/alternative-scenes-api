@@ -24,7 +24,7 @@ public class Converters {
         eventDto.setLocality(convertLocalityDtoToEntity(event.getLocality()));
         eventDto.setUserApp(convertUserAppEntityToDto(event.getUserApp()));
         eventDto.setEventDates(eventDateDtos);
-        eventDto.setCategory(event.getCategory().getCategory());
+        eventDto.setCategory(convertCategoryDtoToEntity(event.getCategory()));
         eventDto.setMusicalGenres(musicalGenreDtos);
 
         return eventDto;
@@ -56,6 +56,15 @@ public class Converters {
 
 
         return stateDto;
+    }
+
+    private static CategoryDto convertCategoryDtoToEntity(Category category) {
+        CategoryDto categoryDto = new CategoryDto();
+
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getCategory());
+
+        return categoryDto;
     }
 
     public static UserAppDto convertUserAppEntityToDto(UserApp userApp) {

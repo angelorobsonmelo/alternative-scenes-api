@@ -13,7 +13,7 @@ public class EventDto {
     private LocalityDto locality;
     private List<EventDateDto> eventDates;
     private List<MusicalGenreDto> musicalGenres;
-    private String category;
+    private CategoryDto category;
     private Boolean status;
     private LocalDate registrationDate;
     private UserAppDto userApp;
@@ -74,11 +74,11 @@ public class EventDto {
         this.musicalGenres = musicalGenres;
     }
 
-    public String getCategory() {
+    public CategoryDto getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryDto category) {
         this.category = category;
     }
 
