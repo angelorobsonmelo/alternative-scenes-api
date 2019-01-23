@@ -54,7 +54,7 @@ public class EventController {
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
                                                    BindingResult result) {
         Response<EventDto> response = new Response<>();
-        Event event = converterDtoParaLancamento(eventSaveDto);
+        Event event = converterEventSaveDtoToEntity(eventSaveDto);
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));

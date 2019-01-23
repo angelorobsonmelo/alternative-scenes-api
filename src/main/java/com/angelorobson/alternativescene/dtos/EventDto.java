@@ -10,9 +10,7 @@ public class EventDto {
     private String title;
     private String description;
     private String photoUrl;
-    private String locality;
-    private String city;
-    private String state;
+    private LocalityDto locality;
     private List<EventDateDto> eventDates;
     private List<MusicalGenreDto> musicalGenres;
     private String category;
@@ -52,28 +50,12 @@ public class EventDto {
         this.photoUrl = photoUrl;
     }
 
-    public String getLocality() {
+    public LocalityDto getLocality() {
         return locality;
     }
 
-    public void setLocality(String locality) {
+    public void setLocality(LocalityDto locality) {
         this.locality = locality;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public List<EventDateDto> getEventDates() {

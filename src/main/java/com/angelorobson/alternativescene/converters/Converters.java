@@ -21,15 +21,41 @@ public class Converters {
         eventDto.setTitle(event.getTitle());
         eventDto.setRegistrationDate(event.getRegistrationDate());
         eventDto.setDescription(event.getDescription());
-        eventDto.setLocality(event.getLocality().getLocality());
-        eventDto.setCity(event.getLocality().getCity().getCity());
-        eventDto.setState(event.getLocality().getCity().getState().getState());
+        eventDto.setLocality(convertLocalityDtoToEntity(event.getLocality()));
         eventDto.setUserApp(convertUserAppEntityToDto(event.getUserApp()));
         eventDto.setEventDates(eventDateDtos);
         eventDto.setCategory(event.getCategory().getCategory());
         eventDto.setMusicalGenres(musicalGenreDtos);
 
         return eventDto;
+    }
+
+    private static LocalityDto convertLocalityDtoToEntity(Locality locality) {
+        LocalityDto localityDto = new LocalityDto();
+        localityDto.setId(locality.getId());
+        localityDto.setName(locality.getLocality());
+        localityDto.setCity(convertCityDtoToEntity(locality.getCity()));
+
+        return localityDto;
+    }
+
+    private static CityDto convertCityDtoToEntity(City city) {
+        CityDto cityDto = new CityDto();
+        cityDto.setId(city.getId());
+        cityDto.setName(city.getCity());
+        cityDto.setState(convertStateDtoToEntity(city.getState()));
+
+        return cityDto;
+    }
+
+    private static StateDto convertStateDtoToEntity(State state) {
+        StateDto stateDto = new StateDto();
+        stateDto.setId(state.getId());
+        stateDto.setName(state.getState());
+        stateDto.setUf(state.getUf());
+
+
+        return stateDto;
     }
 
     public static UserAppDto convertUserAppEntityToDto(UserApp userApp) {
@@ -64,7 +90,7 @@ public class Converters {
     }
 
 
-    public static Event converterDtoParaLancamento(EventSaveDto eventSaveDto) {
+    public static Event converterEventSaveDtoToEntity(EventSaveDto eventSaveDto) {
         List<MusicalGenre> musicalGenres = convertMusicalGenresIdsToEntity(eventSaveDto.getMusicalGenres());
 
         UserApp userApp = new UserApp();
