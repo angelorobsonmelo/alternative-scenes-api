@@ -1,6 +1,7 @@
 package com.angelorobson.alternativescene.controllers;
 
 
+import com.angelorobson.alternativescene.converters.Converters;
 import com.angelorobson.alternativescene.dtos.EventDto;
 import com.angelorobson.alternativescene.dtos.EventSaveDto;
 import com.angelorobson.alternativescene.entities.Event;
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-import static com.angelorobson.alternativescene.converters.Converters.*;
+import static com.angelorobson.alternativescene.converters.Converters.convertEventEntityToDto;
+import static com.angelorobson.alternativescene.converters.Converters.converterEventSaveDtoToEntity;
 import static org.springframework.data.domain.Sort.Direction.valueOf;
 
 @RestController
@@ -115,45 +117,29 @@ public class EventController {
         Response<EventDto> response = new Response<>();
         eventSaveDto.setId(Optional.of(id));
 
-        Event contact = convertEventSaveDtoToEntity(eventSaveDto, result);
+        Event event = convertEventSaveDtoToEntity(eventSaveDto, result);
+        event = this.eventService.save(event);
 
-//        Contact contactReturned = this.contactService.edit(contact);
-//
-//        ContactDto contactDto = convertContactEntityToDto(contactReturned);
-        EventDto eventDto = new EventDto();
-        response.setData(eventDto);
+        response.setData(convertEventEntityToDto(event));
         return ResponseEntity.ok(response);
     }
 
     private Event convertEventSaveDtoToEntity(EventSaveDto eventSaveDto, BindingResult result) {
-//        Contact contact = getContactEntityFromDto(contactSaveDto);
         if (eventSaveDto.getId().isPresent()) {
             Optional<Event> eventReturned = this.eventService.findEventBy(eventSaveDto.getId().get());
             if (eventReturned.isPresent()) {
-                Event event = eventReturned.get();
 
-
-                return event;
+                Event event1 = Converters.converterEventSaveDtoToEntity(eventSaveDto);
+                event1.setId(eventReturned.get().getId());
+                event1.setRegistrationDate(eventReturned.get().getRegistrationDate());
+//
+//                event1.setId(event.getId());
+//                event1.setLocality(event.getLocality());
+                return event1;
             } else {
                 result.addError(new ObjectError("user", "User not found."));
             }
         }
-
-//        if (contactSaveDto.getId().isPresent()) {
-//            Optional<Contact> contactDataBaseReturned = this.contactService.findById(contactSaveDto.getId().get());
-//            if (contactDataBaseReturned.isPresent()) {
-//                Contact contactEntityFromDto = getContactEntityFromDto(contactSaveDto);
-//
-//                contactDataBaseReturned.get().setCategory(contactEntityFromDto.getCategory());
-//                contactDataBaseReturned.get().setUserNameInstagram(contactEntityFromDto.getUserNameInstagram());
-//                contactDataBaseReturned.get().setFunctions(contactEntityFromDto.getFunctions());
-//                contactDataBaseReturned.get().setGender(contactEntityFromDto.getGender());
-//
-//                return  contactDataBaseReturned.get();
-//            } else {
-//                result.addError(new ObjectError("user", "User not found."));
-//            }
-//        }
 
         return new Event();
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class State implements Serializable {
@@ -12,7 +13,7 @@ public class State implements Serializable {
     private static final long serialVersionUID = 3246458288826274268L;
 
     private Long id;
-    private String state;
+    private String name;
     private String uf;
     private List<City> cities;
 
@@ -26,12 +27,12 @@ public class State implements Serializable {
         this.id = id;
     }
 
-    public String getState() {
-        return state;
+    public String getName() {
+        return name;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUf() {
@@ -54,10 +55,26 @@ public class State implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        State state = (State) o;
+        return Objects.equals(id, state.id) &&
+                Objects.equals(name, state.name) &&
+                Objects.equals(uf, state.uf) &&
+                Objects.equals(cities, state.cities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, uf, cities);
+    }
+
+    @Override
     public String toString() {
         return "State{" +
                 "id=" + id +
-                ", state='" + state + '\'' +
+                ", name='" + name + '\'' +
                 ", uf='" + uf + '\'' +
                 ", cities=" + cities +
                 '}';

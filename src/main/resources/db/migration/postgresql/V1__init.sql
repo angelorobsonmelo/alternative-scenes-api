@@ -3,14 +3,14 @@ CREATE SEQUENCE hibernate_sequence START 1;
 CREATE TABLE state
 (
   id    BIGSERIAL PRIMARY KEY,
-  state CHARACTER VARYING    NOT NULL,
+  name CHARACTER VARYING    NOT NULL,
   uf    CHARACTER VARYING(2) NOT NULL
 );
 
 CREATE TABLE city
 (
   id       BIGSERIAL PRIMARY KEY,
-  city     CHARACTER VARYING NOT NULL,
+  name     CHARACTER VARYING NOT NULL,
   state_id INT               NOT NULL,
   FOREIGN KEY (state_id) REFERENCES state (id)
 );
@@ -44,7 +44,7 @@ CREATE TABLE user_device
 CREATE TABLE locality
 (
   id       BIGSERIAL PRIMARY KEY,
-  locality CHARACTER VARYING,
+  name CHARACTER VARYING,
   city_id  INT NOT NULL,
   FOREIGN KEY (city_id) REFERENCES city (id)
 );
@@ -52,7 +52,7 @@ CREATE TABLE locality
 CREATE TABLE category
 (
   id       BIGSERIAL PRIMARY KEY,
-  category CHARACTER VARYING NOT NULL
+  name CHARACTER VARYING NOT NULL
 );
 
 CREATE TABLE event
@@ -75,7 +75,7 @@ CREATE TABLE event
 CREATE TABLE event_date
 (
   id         BIGSERIAL PRIMARY KEY,
-  event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
   event_hour CHARACTER VARYING NOT NULL,
   event_id   INT                         NOT NULL,
   FOREIGN KEY (event_id) REFERENCES event (id)

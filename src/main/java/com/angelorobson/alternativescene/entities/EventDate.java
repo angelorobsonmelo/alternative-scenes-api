@@ -13,7 +13,7 @@ public class EventDate implements Serializable {
     private static final long serialVersionUID = 6898364585678450L;
 
     private Long id;
-    private LocalDate eventDate;
+    private LocalDate date;
     private String eventHour;
     private Event event;
     private PriceDate priceDate;
@@ -28,12 +28,12 @@ public class EventDate implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getEventDate() {
-        return eventDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setEventDate(LocalDate eventDate) {
-        this.eventDate = eventDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public String getEventHour() {
@@ -67,24 +67,24 @@ public class EventDate implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EventDate eventDate1 = (EventDate) o;
-        return Objects.equals(id, eventDate1.id) &&
-                Objects.equals(eventDate, eventDate1.eventDate) &&
-                Objects.equals(eventHour, eventDate1.eventHour) &&
-                Objects.equals(event, eventDate1.event) &&
-                Objects.equals(priceDate, eventDate1.priceDate);
+        EventDate eventDate = (EventDate) o;
+        return Objects.equals(id, eventDate.id) &&
+                Objects.equals(date, eventDate.date) &&
+                Objects.equals(eventHour, eventDate.eventHour) &&
+                Objects.equals(event, eventDate.event) &&
+                Objects.equals(priceDate, eventDate.priceDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, eventDate, eventHour, event, priceDate);
+        return Objects.hash(id, date, eventHour, event, priceDate);
     }
 
     @Override
     public String toString() {
         return "EventDate{" +
                 "id=" + id +
-                ", eventDate=" + eventDate +
+                ", date=" + date +
                 ", eventHour='" + eventHour + '\'' +
                 ", event=" + event +
                 ", priceDate=" + priceDate +

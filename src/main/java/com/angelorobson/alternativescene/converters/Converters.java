@@ -33,7 +33,7 @@ public class Converters {
     private static LocalityDto convertLocalityDtoToEntity(Locality locality) {
         LocalityDto localityDto = new LocalityDto();
         localityDto.setId(locality.getId());
-        localityDto.setName(locality.getLocality());
+        localityDto.setName(locality.getName());
         localityDto.setCity(convertCityDtoToEntity(locality.getCity()));
 
         return localityDto;
@@ -42,7 +42,7 @@ public class Converters {
     private static CityDto convertCityDtoToEntity(City city) {
         CityDto cityDto = new CityDto();
         cityDto.setId(city.getId());
-        cityDto.setName(city.getCity());
+        cityDto.setName(city.getName());
         cityDto.setState(convertStateDtoToEntity(city.getState()));
 
         return cityDto;
@@ -51,7 +51,7 @@ public class Converters {
     private static StateDto convertStateDtoToEntity(State state) {
         StateDto stateDto = new StateDto();
         stateDto.setId(state.getId());
-        stateDto.setName(state.getState());
+        stateDto.setName(state.getName());
         stateDto.setUf(state.getUf());
 
 
@@ -62,7 +62,7 @@ public class Converters {
         CategoryDto categoryDto = new CategoryDto();
 
         categoryDto.setId(category.getId());
-        categoryDto.setName(category.getCategory());
+        categoryDto.setName(category.getName());
 
         return categoryDto;
     }
@@ -82,7 +82,7 @@ public class Converters {
         EventDateDto eventDateDto = new EventDateDto();
 
         eventDateDto.setId(eventDate.getId());
-        eventDateDto.setDate(eventDate.getEventDate());
+        eventDateDto.setDate(eventDate.getDate());
         eventDateDto.setPriceDate(eventDate.getPriceDate().getPrice());
         eventDateDto.setHour(eventDate.getEventHour());
 
@@ -117,7 +117,7 @@ public class Converters {
         Locality locality = new Locality();
         locality.setCity(city);
         locality.getCity().setState(state);
-        locality.setLocality(eventSaveDto.getLocality());
+        locality.setName(eventSaveDto.getLocality());
 
         Event event = new Event();
         event.setTitle(eventSaveDto.getTitle());
@@ -156,9 +156,9 @@ public class Converters {
         eventDateDtos.forEach(eventDateDto -> {
             EventDate eventDate = new EventDate();
             PriceDate priceDate = new PriceDate();
-            priceDate.setPrice(eventDateDto.getPriceDate());
-            eventDate.setEventDate(eventDateDto.getEventDate());
-            eventDate.setEventHour(eventDateDto.getEventHour());
+            priceDate.setPrice(eventDateDto.getPrice());
+            eventDate.setDate(eventDateDto.getDate());
+            eventDate.setEventHour(eventDateDto.getHour());
             eventDate.setPriceDate(priceDate);
             eventDate.setEvent(event);
             priceDate.setEventDate(eventDate);

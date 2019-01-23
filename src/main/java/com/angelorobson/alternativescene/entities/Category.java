@@ -14,7 +14,7 @@ public class Category implements Serializable {
     private static final long serialVersionUID = -8600634840157533556L;
 
     private Long id;
-    private String category;
+    private String name;
     private List<Event> events;
 
     @Id
@@ -27,12 +27,12 @@ public class Category implements Serializable {
         this.id = id;
     }
 
-    public String getCategory() {
-        return category;
+    public String getName() {
+        return name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @OneToMany(mappedBy = "category")
@@ -49,22 +49,22 @@ public class Category implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Category category1 = (Category) o;
-        return Objects.equals(id, category1.id) &&
-                Objects.equals(category, category1.category) &&
-                Objects.equals(events, category1.events);
+        Category category = (Category) o;
+        return Objects.equals(id, category.id) &&
+                Objects.equals(name, category.name) &&
+                Objects.equals(events, category.events);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, category, events);
+        return Objects.hash(id, name, events);
     }
 
     @Override
     public String toString() {
         return "Category{" +
                 "id=" + id +
-                ", category='" + category + '\'' +
+                ", name='" + name + '\'' +
                 ", events=" + events +
                 '}';
     }

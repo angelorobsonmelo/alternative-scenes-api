@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public class DateEventSaveDto {
 
     private Long id;
-    private LocalDate eventDate;
-    private String eventHour;
-    private Double priceDate;
+    private LocalDate date;
+    private String hour;
+    private Double price;
 
     public Long getId() {
         return id;
@@ -17,27 +17,27 @@ public class DateEventSaveDto {
         this.id = id;
     }
 
-    public LocalDate getEventDate() {
-        return eventDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setEventDate(LocalDate eventDate) {
-        this.eventDate = eventDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getEventHour() {
-        return eventHour;
+    public String getHour() {
+        return hour;
     }
 
-    public void setEventHour(String eventHour) {
-        this.eventHour = eventHour;
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 
-    public Double getPriceDate() {
-        return priceDate;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setPriceDate(Double priceDate) {
-        this.priceDate = priceDate;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
