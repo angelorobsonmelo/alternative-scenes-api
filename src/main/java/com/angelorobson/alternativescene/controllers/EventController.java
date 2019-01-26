@@ -26,6 +26,7 @@ import static org.springframework.data.domain.Sort.Direction.valueOf;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/events")
 public class EventController {
 

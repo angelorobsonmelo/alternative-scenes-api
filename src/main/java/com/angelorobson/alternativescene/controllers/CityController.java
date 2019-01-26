@@ -14,7 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
 @RequestMapping("/cities")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 public class CityController {
 
     private static final Logger log = getLogger(CityController.class);
