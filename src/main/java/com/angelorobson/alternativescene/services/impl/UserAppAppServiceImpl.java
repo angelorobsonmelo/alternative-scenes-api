@@ -41,7 +41,7 @@ public class UserAppAppServiceImpl implements UserAppService {
   @Override
   public Optional<UserApp> findById(Long id) {
     log.info("Finding a UserApp by ID: {}", id);
-    return Optional.ofNullable(userAppRepository.findOne(id));
+    return userAppRepository.findById(id);
   }
 
   @Override
@@ -62,7 +62,7 @@ public class UserAppAppServiceImpl implements UserAppService {
     @Override
     public void remove(Long id) {
         log.info("Removing a UserApp with {}", id);
-        userAppRepository.delete(id);
+        userAppRepository.deleteById(id);
     }
 
 }

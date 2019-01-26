@@ -7,7 +7,7 @@ public class EventDateDto {
     private Long id;
     private LocalDate date;
     private String hour;
-    private Double priceDate;
+    private Double price;
 
     public Long getId() {
         return id;
@@ -33,11 +33,11 @@ public class EventDateDto {
         this.hour = hour;
     }
 
-    public Double getPriceDate() {
-        return priceDate;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setPriceDate(Double priceDate) {
-        this.priceDate = priceDate;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

@@ -23,6 +23,7 @@ import java.util.Optional;
 import static com.angelorobson.alternativescene.converters.Converters.convertEventEntityToDto;
 import static com.angelorobson.alternativescene.converters.Converters.converterEventSaveDtoToEntity;
 import static org.springframework.data.domain.Sort.Direction.valueOf;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/events")
@@ -45,11 +46,12 @@ public class EventController {
         eventFilter.setStatus(true);
         Response<Page<EventDto>> response = new Response<>();
 
-        Pageable pageRequest = new PageRequest(pag, Integer.valueOf(perPage), valueOf(dir), ord);
+        PageRequest pageRequest = PageRequest.of(pag, Integer.valueOf(perPage), valueOf(dir), ord);
+
         Page<EventDto> eventsReturned = this.eventService.findAllByFilter(eventFilter, pageRequest);
 
         response.setData(eventsReturned);
-        return ResponseEntity.ok(response);
+        return ok(response);
     }
 
     @PostMapping
@@ -60,12 +62,12 @@ public class EventController {
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-            return ResponseEntity.badRequest().body(response);
+            return badRequest().body(response);
         }
 
         event = this.eventService.save(event);
         response.setData(convertEventEntityToDto(event));
-        return ResponseEntity.ok(response);
+        return ok(response);
     }
 
     @GetMapping(value = "{id}")
@@ -73,12 +75,9 @@ public class EventController {
         Response<EventDto> response = new Response<>();
 
         Optional<EventDto> eventDtoReturned = this.eventService.findOne(id);
-        if (eventDtoReturned.isPresent()) {
-            response.setData(eventDtoReturned.get());
-            return ResponseEntity.ok(response);
-        }
+        eventDtoReturned.ifPresent(response::setData);
 
-        return ResponseEntity.notFound().build();
+        return response.getData().getId() != null ? ok(response) : notFound().build();
     }
 
     @GetMapping(value = "/getBy/{id}/{userId}/{status}")
@@ -90,10 +89,10 @@ public class EventController {
         Optional<EventDto> eventDtoReturned = this.eventService.findByIdAndUserAppIdAndStatus(id, userId, status);
         if (eventDtoReturned.isPresent()) {
             response.setData(eventDtoReturned.get());
-            return ResponseEntity.ok(response);
+            return ok(response);
         }
 
-        return ResponseEntity.notFound().build();
+        return notFound().build();
     }
 
     @DeleteMapping(value = "/{id}")
@@ -104,11 +103,11 @@ public class EventController {
 
         if (!eventDtoReturned.isPresent()) {
             response.getErrors().add("Error removing. Record not found for id " + id);
-            return ResponseEntity.badRequest().body(response);
+            return badRequest().body(response);
         }
 
         this.eventService.remove(id);
-        return ResponseEntity.ok(new Response<>());
+        return ok(new Response<>());
     }
 
     @PutMapping(value = "/{id}")
@@ -121,7 +120,7 @@ public class EventController {
         event = this.eventService.save(event);
 
         response.setData(convertEventEntityToDto(event));
-        return ResponseEntity.ok(response);
+        return ok(response);
     }
 
     private Event convertEventSaveDtoToEntity(EventSaveDto eventSaveDto, BindingResult result) {

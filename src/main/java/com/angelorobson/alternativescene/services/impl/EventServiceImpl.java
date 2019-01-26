@@ -38,15 +38,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Optional<EventDto> findOne(Long id) {
-        Event event = eventRepository.findOne(id);
-        EventDto eventDto = Converters.convertEventEntityToDto(event);
-        return Optional.of(eventDto) ;
+        EventDto eventDto = new EventDto();
+        Optional<Event> event = eventRepository.findById(id);
+
+        if (event.isPresent()) {
+            eventDto = Converters.convertEventEntityToDto(event.get());
+        }
+
+        return Optional.ofNullable(eventDto);
     }
 
     @Override
     public Optional<Event> findEventBy(Long id) {
-        Event event = eventRepository.findOne(id);
-        return Optional.of(event);
+        return eventRepository.findById(id);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void remove(Long id) {
-        eventRepository.delete(id);
+        eventRepository.deleteById(id);
     }
 
 }

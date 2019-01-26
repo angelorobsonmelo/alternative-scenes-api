@@ -20,6 +20,6 @@ public class EventDateServiceImpl implements EventDateService {
 
     @Override
     public List<EventDate> save(List<EventDate> eventDate) {
-        return eventDateRepository.save(eventDate);
+        return eventDateRepository.saveAll(eventDate);
     }
 }

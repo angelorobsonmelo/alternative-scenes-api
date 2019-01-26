@@ -83,7 +83,7 @@ public class Converters {
 
         eventDateDto.setId(eventDate.getId());
         eventDateDto.setDate(eventDate.getDate());
-        eventDateDto.setPriceDate(eventDate.getPriceDate().getPrice());
+        eventDateDto.setPrice(eventDate.getPriceDate().getPrice());
         eventDateDto.setHour(eventDate.getEventHour());
 
         return eventDateDto;

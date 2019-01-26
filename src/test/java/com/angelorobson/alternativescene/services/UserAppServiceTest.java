@@ -48,7 +48,7 @@ public class UserAppServiceTest {
     userAppSaveDto = new UserAppSaveDto();
     when(userAppRepository.save(any(UserApp.class))).thenReturn(new UserApp());
     when(userAppRepository.findByEmail(anyString())).thenReturn(new UserApp());
-    when(userAppRepository.findOne(anyLong())).thenReturn(new UserApp());
+    when(userAppRepository.findById(anyLong())).thenReturn(Optional.of(new UserApp()));
     when(userAppRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>
       (new ArrayList<>()));
   }
@@ -73,7 +73,7 @@ public class UserAppServiceTest {
   public void it_should_find_by_id() {
     Optional<UserApp> userAppReturned = userAppService.findById(ID);
 
-    verify(userAppRepository).findOne(eq(ID));
+    verify(userAppRepository).findById(eq(ID));
     assertTrue(userAppReturned.isPresent());
   }
 
@@ -98,7 +98,7 @@ public class UserAppServiceTest {
   public void it_should_editt_remove_user() {
     userAppService.remove(ID);
 
-    verify(userAppRepository).delete(eq(ID));
+    verify(userAppRepository).deleteById(eq(ID));
   }
 
 }
