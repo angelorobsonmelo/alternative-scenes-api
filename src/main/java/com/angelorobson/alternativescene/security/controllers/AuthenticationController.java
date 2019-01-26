@@ -3,6 +3,7 @@ package com.angelorobson.alternativescene.security.controllers;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.security.dto.JwtAuthenticationDto;
 import com.angelorobson.alternativescene.security.dto.TokenDto;
+import com.angelorobson.alternativescene.security.services.JwtUserDetailsServiceImpl;
 import com.angelorobson.alternativescene.security.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,14 +31,19 @@ public class AuthenticationController {
 	private static final String TOKEN_HEADER = "Authorization";
 	private static final String BEARER_PREFIX = "Bearer ";
 
-	@Autowired
 	private AuthenticationManager authenticationManager;
-
-	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	private JwtUserDetailsServiceImpl jwtUserDetailsService;
+
+	public AuthenticationController() {
+	}
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, JwtUserDetailsServiceImpl jwtUserDetailsService) {
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenUtil = jwtTokenUtil;
+		this.jwtUserDetailsService = jwtUserDetailsService;
+	}
 
 	/**
 	 * Generates and returns a new JWT token.
@@ -52,7 +57,7 @@ public class AuthenticationController {
 	public ResponseEntity<Response<TokenDto>> generateTokenJwt(
 			@Valid @RequestBody JwtAuthenticationDto authenticationDto, BindingResult result)
 			throws AuthenticationException {
-		Response<TokenDto> response = new Response<TokenDto>();
+		Response<TokenDto> response = new Response<>();
 
 		if (result.hasErrors()) {
 			log.error("Error validating user: {}", result.getAllErrors());
@@ -62,10 +67,10 @@ public class AuthenticationController {
 
 		log.info("Generating token for email {}.", authenticationDto.getEmail());
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				authenticationDto.getEmail(), authenticationDto.getSenha()));
+				authenticationDto.getEmail(), authenticationDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationDto.getEmail());
+		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationDto.getEmail());
 		String token = jwtTokenUtil.getToken(userDetails);
 		response.setData(new TokenDto(token));
 
@@ -81,7 +86,7 @@ public class AuthenticationController {
 	@PostMapping(value = "/refresh")
 	public ResponseEntity<Response<TokenDto>> generateRefreshTokenJwt(HttpServletRequest request) {
 		log.info("Generating refresh token JWT.");
-		Response<TokenDto> response = new Response<TokenDto>();
+		Response<TokenDto> response = new Response<>();
 		Optional<String> token = Optional.ofNullable(request.getHeader(TOKEN_HEADER));
 
 		if (token.isPresent() && token.get().startsWith(BEARER_PREFIX)) {

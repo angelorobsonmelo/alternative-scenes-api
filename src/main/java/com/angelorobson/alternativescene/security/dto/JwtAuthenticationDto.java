@@ -1,12 +1,13 @@
 package com.angelorobson.alternativescene.security.dto;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 public class JwtAuthenticationDto {
 
 	private String email;
-	private String senha;
+	private String password;
 
 	public JwtAuthenticationDto() {
 	}
@@ -22,17 +23,17 @@ public class JwtAuthenticationDto {
 	}
 
 	@NotEmpty(message = "Password can not be empty.")
-	public String getSenha() {
-		return senha;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
 	public String toString() {
-		return "JwtAuthenticationRequestDto [email=" + email + ", senha=" + senha + "]";
+		return "JwtAuthenticationRequestDto [email=" + email + ", password=" + password + "]";
 	}
 
 }
