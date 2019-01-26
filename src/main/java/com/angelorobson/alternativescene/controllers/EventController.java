@@ -127,12 +127,11 @@ public class EventController {
         if (eventSaveDto.getId().isPresent()) {
             Optional<Event> eventReturned = this.eventService.findEventBy(eventSaveDto.getId().get());
             if (eventReturned.isPresent()) {
+                Event toEntity = Converters.converterEventSaveDtoToEntity(eventSaveDto);
+                toEntity.setId(eventReturned.get().getId());
+                toEntity.setRegistrationDate(eventReturned.get().getRegistrationDate());
 
-                Event event1 = Converters.converterEventSaveDtoToEntity(eventSaveDto);
-                event1.setId(eventReturned.get().getId());
-                event1.setRegistrationDate(eventReturned.get().getRegistrationDate());
-
-                return event1;
+                return toEntity;
             } else {
                 result.addError(new ObjectError("user", "User not found."));
             }
