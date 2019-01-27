@@ -1,6 +1,10 @@
 package com.angelorobson.alternativescene.dtos;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+import static java.time.format.DateTimeFormatter.*;
 
 public class EventDateDto {
 
@@ -8,6 +12,7 @@ public class EventDateDto {
     private LocalDate date;
     private String hour;
     private Double price;
+    private String eventDateAndHourToString;
 
     public Long getId() {
         return id;
@@ -40,4 +45,16 @@ public class EventDateDto {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    public void setEventDateAndHourToString() {
+        DateTimeFormatter formatter = ofPattern("d 'de' MMMM 'de' yyyy", new Locale("pt", "BR"));
+        String formattedString = date.format(formatter);
+
+        eventDateAndHourToString = formattedString + ", " + hour + "h";
+    }
+
+    public String getEventDateAndHourToString() {
+        return eventDateAndHourToString;
+    }
+
 }
