@@ -47,10 +47,10 @@ public class EventDateDto {
     }
 
     public void setEventDateAndHourToString() {
-        DateTimeFormatter formatter = ofPattern("d 'de' MMMM 'de' yyyy", new Locale("pt", "BR"));
+        DateTimeFormatter formatter = ofPattern("d MMM", new Locale("pt", "BR"));
         String formattedString = date.format(formatter);
 
-        eventDateAndHourToString = formattedString + ", " + hour + "h";
+        eventDateAndHourToString = formattedString.toUpperCase() + ", " + hour;
     }
 
     public String getEventDateAndHourToString() {
