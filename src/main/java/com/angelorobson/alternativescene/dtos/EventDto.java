@@ -17,6 +17,8 @@ public class EventDto {
     private Boolean status;
     private LocalDate registrationDate;
     private UserAppDto userApp;
+    private String eventDate;
+    private String eventLocation;
 
     public Long getId() {
         return id;
@@ -104,5 +106,24 @@ public class EventDto {
 
     public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public void setEventLocation() {
+    }
+
+    public String getEventLocation() {
+        return eventLocation;
+    }
+
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
     }
 }

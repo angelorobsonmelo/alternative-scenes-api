@@ -26,8 +26,22 @@ public class Converters {
         eventDto.setEventDates(eventDateDtos);
         eventDto.setCategory(convertCategoryDtoToEntity(event.getCategory()));
         eventDto.setMusicalGenres(musicalGenreDtos);
+        eventDto.setEventDate(getFormatedDates(eventDateDtos));
+
+        String eventLocationFormat = String.format("%s - %s, %s", event.getLocality().getName(), event.getLocality().getCity().getName(), event.getLocality().getCity().getState().getUf());
+        eventDto.setEventLocation(eventLocationFormat);
 
         return eventDto;
+    }
+
+    private static String getFormatedDates(List<EventDateDto> eventDateDtos) {
+        List<String> datesFormated = new ArrayList<>();
+
+        eventDateDtos.forEach(
+                it -> datesFormated.add(it.getEventDateAndHourToString())
+        );
+
+        return String.join(" - ", datesFormated);
     }
 
     private static LocalityDto convertLocalityDtoToEntity(Locality locality) {
