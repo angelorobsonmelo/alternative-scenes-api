@@ -28,7 +28,9 @@ public class Converters {
         eventDto.setMusicalGenres(musicalGenreDtos);
         eventDto.setEventDate(getFormatedDates(eventDateDtos));
 
-        String eventLocationFormat = String.format("%s - %s, %s", event.getLocality().getName(), event.getLocality().getCity().getName(), event.getLocality().getCity().getState().getUf());
+        String eventLocationFormat = String.format("%s - %s, %s", event.getLocality().getName(),
+                event.getLocality().getCity().getName(),
+                event.getLocality().getCity().getState().getUf());
         eventDto.setEventLocation(eventLocationFormat);
 
         return eventDto;
