@@ -47,7 +47,7 @@ public class EventController {
         eventFilter.setStatus(true);
         Response<Page<EventDto>> response = new Response<>();
 
-        PageRequest pageRequest = PageRequest.of(pag, Integer.valueOf(perPage), valueOf(dir), ord);
+        PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);
 
         Page<EventDto> eventsReturned = this.eventService.findAllByFilter(eventFilter, pageRequest);
 

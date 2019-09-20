@@ -2,6 +2,8 @@ package com.angelorobson.alternativescene.dtos;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Calendar;
 import java.util.Locale;
 
 import static java.time.format.DateTimeFormatter.*;
@@ -47,10 +49,12 @@ public class EventDateDto {
     }
 
     public void setEventDateAndHourToString() {
-        DateTimeFormatter formatter = ofPattern("d MMM", new Locale("pt", "BR"));
+        Locale locale = new Locale("pt", "BR");
+        DateTimeFormatter formatter = ofPattern("d MMM", locale);
         String formattedString = date.format(formatter);
 
-        eventDateAndHourToString = formattedString.toUpperCase() + ", " + hour;
+        String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale);
+        eventDateAndHourToString = dayOfWeek + ", " + formattedString.toUpperCase() + ", " + hour;
     }
 
     public String getEventDateAndHourToString() {
