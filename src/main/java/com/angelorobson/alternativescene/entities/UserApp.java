@@ -61,7 +61,6 @@ public class UserApp implements Serializable {
         this.email = email;
     }
 
-    @Column(nullable = false)
     @JsonIgnore
     public String getPassword() {
         return password;
