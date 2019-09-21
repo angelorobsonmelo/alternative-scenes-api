@@ -54,7 +54,7 @@ public class EventDateDto {
         String formattedString = date.format(formatter);
 
         String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale);
-        eventDateAndHourToString = dayOfWeek + ", " + formattedString.toUpperCase() + ", " + hour;
+        eventDateAndHourToString = dayOfWeek + ", " + formattedString.toUpperCase();
     }
 
     public String getEventDateAndHourToString() {
