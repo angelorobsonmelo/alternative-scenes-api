@@ -25,6 +25,15 @@ public interface UserAppService {
    */
   Optional<UserApp> findByEmail(String email);
 
+    /**
+     * Search and return a given user an email.
+     *
+     * @param email
+     * @param googleAccountId
+     * @return Optional<UserApp>
+     */
+    Optional<UserApp> findByEmailAndGoogleAccountId(String email, String googleAccountId);
+
   /**
    * Search and return a user by ID.
    *

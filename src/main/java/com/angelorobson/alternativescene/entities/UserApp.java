@@ -24,6 +24,7 @@ public class UserApp implements Serializable {
     private static final long serialVersionUID = -6760436428804236349L;
 
     private Long id;
+    private String googleAccountId;
     private String name;
     private String email;
     private String password;
@@ -32,6 +33,7 @@ public class UserApp implements Serializable {
     private LocalDate registrationDate;
     private String imageUrl;
     private GenderEnum gender;
+    private String phoneNumber;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,6 +45,15 @@ public class UserApp implements Serializable {
         this.id = id;
     }
 
+    public void setGoogleAccountId(String googleAccountId) {
+        this.googleAccountId = googleAccountId;
+    }
+
+    @Column(nullable = false)
+    public String getGoogleAccountId() {
+        return googleAccountId;
+    }
+
     @Column(nullable = false)
     public String getName() {
         return name;
@@ -52,7 +63,7 @@ public class UserApp implements Serializable {
         this.name = name;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     public String getEmail() {
         return email;
     }
@@ -114,6 +125,14 @@ public class UserApp implements Serializable {
 
     public void setGender(GenderEnum gender) {
         this.gender = gender;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @PrePersist

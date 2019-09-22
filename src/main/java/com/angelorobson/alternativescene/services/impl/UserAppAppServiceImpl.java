@@ -39,6 +39,11 @@ public class UserAppAppServiceImpl implements UserAppService {
   }
 
   @Override
+  public Optional<UserApp> findByEmailAndGoogleAccountId(String email, String googleAccountId) {
+    return Optional.ofNullable(userAppRepository.findByEmailAndAndGoogleAccountId(email, googleAccountId));
+  }
+
+  @Override
   public Optional<UserApp> findById(Long id) {
     log.info("Finding a UserApp by ID: {}", id);
     return userAppRepository.findById(id);

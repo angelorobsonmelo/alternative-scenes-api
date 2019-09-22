@@ -32,10 +32,10 @@ VALUES (4, 'https://previews.customer.envatousercontent.com/files/29437985/590-b
         1, 1, true, 1);
 
 INSERT INTO event_date (id, date, event_hour, event_id) VALUES (1, '2018-05-06', '19:00HS', 1);
-INSERT INTO event_date (id, date, event_hour, event_id) VALUES (2, '2018-03-01', '20:00HS', 2);
+INSERT INTO event_date (id, date, event_hour, event_id) VALUES (2, '2018-08-02', '20:00HS', 2);
 INSERT INTO event_date (id, date, event_hour, event_id) VALUES (3, '2018-03-01', '20:00HS', 3);
-INSERT INTO event_date (id, date, event_hour, event_id) VALUES (4, '2018-03-01', '20:00HS', 4);
-INSERT INTO event_date (id, date, event_hour, event_id) VALUES (5, '2018-03-01', '20:00HS', 4);
+INSERT INTO event_date (id, date, event_hour, event_id) VALUES (4, '2018-06-03', '20:00HS', 4);
+INSERT INTO event_date (id, date, event_hour, event_id) VALUES (5, '2018-03-08', '20:00HS', 4);
 
 INSERT INTO price_date (id, price, event_date_id) VALUES (1, 10.00, 1);
 INSERT INTO price_date (id, price, event_date_id) VALUES (2, 25.00, 2);

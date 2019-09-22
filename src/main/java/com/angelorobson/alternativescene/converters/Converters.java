@@ -87,6 +87,7 @@ public class Converters {
         UserAppDto userAppDto = new UserAppDto();
 
         userAppDto.setId(userApp.getId());
+        userAppDto.setGoogleAccountId(userApp.getGoogleAccountId());
         userAppDto.setName(userApp.getName());
         userAppDto.setImageUrl(userApp.getImageUrl());
         userAppDto.setEmail(userApp.getEmail());

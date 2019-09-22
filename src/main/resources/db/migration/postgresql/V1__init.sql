@@ -18,20 +18,16 @@ CREATE TABLE city
 CREATE TABLE user_app
 (
   id                BIGSERIAL PRIMARY KEY,
+  google_account_id   CHARACTER VARYING           NOT NULL UNIQUE,
   name              CHARACTER VARYING           NOT NULL,
-  email             CHARACTER VARYING           NOT NULL,
+  email             CHARACTER VARYING           NOT NULL UNIQUE,
   password          CHARACTER VARYING,
   profile           CHARACTER VARYING           NOT NULL,
   image_url         CHARACTER VARYING           NOT NULL,
-  phone_number      CHARACTER VARYING           NOT NULL,
+  phone_number      CHARACTER VARYING,
   date_birth        DATE                        NOT NULL,
   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
-  state_id          INTEGER NOT NULL,
-  city_id           INTEGER NOT NULL,
-  gender            CHARACTER VARYING  NOT NULL,
-  FOREIGN KEY (state_id) REFERENCES state (id),
-  FOREIGN KEY (city_id) REFERENCES city (id)
-
+  gender            CHARACTER VARYING  NOT NULL
 );
 
 CREATE TABLE user_device

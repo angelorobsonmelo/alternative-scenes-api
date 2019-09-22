@@ -9,6 +9,7 @@ public class UserAppDto {
   private String imageUrl;
   private String email;
   private LocalDate registrationDate;
+  private String googleAccountId;
 
   public Long getId() {
     return id;
@@ -16,6 +17,14 @@ public class UserAppDto {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public String getGoogleAccountId() {
+    return googleAccountId;
+  }
+
+  public void setGoogleAccountId(String googleAccountId) {
+    this.googleAccountId = googleAccountId;
   }
 
   public String getName() {

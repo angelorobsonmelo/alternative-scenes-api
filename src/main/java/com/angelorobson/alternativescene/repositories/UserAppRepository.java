@@ -9,4 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserAppRepository extends JpaRepository<UserApp, Long> {
 
     UserApp findByEmail(String email);
+    UserApp findByEmailAndAndGoogleAccountId(String email, String googleAccountId);
 }
