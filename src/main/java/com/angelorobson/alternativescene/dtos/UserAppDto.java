@@ -11,7 +11,10 @@ public class UserAppDto {
   private LocalDate registrationDate;
   private String googleAccountId;
 
-  public Long getId() {
+    public UserAppDto() {
+    }
+
+    public Long getId() {
     return id;
   }
 
