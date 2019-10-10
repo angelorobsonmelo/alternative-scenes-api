@@ -4,8 +4,11 @@ import com.angelorobson.alternativescene.dtos.*;
 import com.angelorobson.alternativescene.entities.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;
 
 public class Converters {
@@ -120,13 +123,16 @@ public class Converters {
 
 
     public static Event converterEventSaveDtoToEntity(EventSaveDto eventSaveDto, City city) {
-        List<MusicalGenre> musicalGenres = convertMusicalGenresIdsToEntity(eventSaveDto.getMusicalGenres());
+        List<MusicalGenre> musicalGenres = singletonList(new MusicalGenre(1L));
 
         UserApp userApp = new UserApp();
         userApp.setId(eventSaveDto.getUserAppId());
 
         Category category = new Category();
-        category.setId(eventSaveDto.getCategoryId());
+        category.setId(1L);
+        if (eventSaveDto.getEventDates().size() > 1) {
+            category.setId(2L);
+        }
 
         State state = new State();
         state.setId(city.getState().getId());
@@ -136,6 +142,8 @@ public class Converters {
         locality.getCity().setState(state);
         locality.setName(eventSaveDto.getLocality());
         locality.setAddress(eventSaveDto.getAddress());
+        locality.setLatitude(eventSaveDto.getLatitude());
+        locality.setLongitude(eventSaveDto.getLongitude());
 
         Event event = new Event();
         event.setLocality(locality);

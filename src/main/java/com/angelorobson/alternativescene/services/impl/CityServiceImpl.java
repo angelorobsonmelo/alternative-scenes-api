@@ -32,7 +32,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public Optional<City> findByName(String name) {
-       City cityReturned = cityRepository.findByName(name);
+        City cityReturned = cityRepository.findByName(name);
         return Optional.ofNullable(cityReturned);
     }
 }

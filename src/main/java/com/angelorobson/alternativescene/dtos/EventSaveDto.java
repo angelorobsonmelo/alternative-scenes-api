@@ -9,11 +9,11 @@ public class EventSaveDto {
     private Optional<Long> id = Optional.empty();
     private String locality;
     private String address;
+    private Double longitude;
+    private Double latitude;
     private Long userAppId;
     private List<DateEventSaveDto> eventDates;
-    private Long categoryId;
     private String cityName;
-    private List<Long> musicalGenres;
     private String imageUrl;
 
     public Optional<Long> getId() {
@@ -56,22 +56,6 @@ public class EventSaveDto {
         this.eventDates = eventDates;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public List<Long> getMusicalGenres() {
-        return musicalGenres;
-    }
-
-    public void setMusicalGenres(List<Long> musicalGenres) {
-        this.musicalGenres = musicalGenres;
-    }
-
     public String getCityName() {
         return cityName;
     }
@@ -88,6 +72,22 @@ public class EventSaveDto {
         this.imageUrl = imageUrl;
     }
 
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,16 +96,17 @@ public class EventSaveDto {
         return Objects.equals(id, that.id) &&
                 Objects.equals(locality, that.locality) &&
                 Objects.equals(address, that.address) &&
+                Objects.equals(longitude, that.longitude) &&
+                Objects.equals(latitude, that.latitude) &&
                 Objects.equals(userAppId, that.userAppId) &&
                 Objects.equals(eventDates, that.eventDates) &&
-                Objects.equals(categoryId, that.categoryId) &&
                 Objects.equals(cityName, that.cityName) &&
-                Objects.equals(musicalGenres, that.musicalGenres);
+                Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, locality, address, userAppId, eventDates, categoryId, cityName, musicalGenres);
+        return Objects.hash(id, locality, address, longitude, latitude, userAppId, eventDates, cityName, imageUrl);
     }
 
     @Override
@@ -114,11 +115,12 @@ public class EventSaveDto {
                 "id=" + id +
                 ", locality='" + locality + '\'' +
                 ", address='" + address + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
                 ", userAppId=" + userAppId +
                 ", eventDates=" + eventDates +
-                ", categoryId=" + categoryId +
-                ", cityName=" + cityName +
-                ", musicalGenres=" + musicalGenres +
+                ", cityName='" + cityName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }

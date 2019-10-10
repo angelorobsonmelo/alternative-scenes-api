@@ -61,7 +61,6 @@ public class EventController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
                                                    BindingResult result) {
         Response<EventDto> response = new Response<>();
@@ -73,7 +72,6 @@ public class EventController {
             response.setData(convertEventEntityToDto(event));
             return ok(response);
         }
-
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));

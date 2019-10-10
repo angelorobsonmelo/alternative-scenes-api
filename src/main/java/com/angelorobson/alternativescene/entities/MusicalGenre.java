@@ -20,6 +20,13 @@ public class MusicalGenre implements Serializable {
     private String name;
     private List<Event> events;
 
+    public MusicalGenre() {
+    }
+
+    public MusicalGenre(Long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
