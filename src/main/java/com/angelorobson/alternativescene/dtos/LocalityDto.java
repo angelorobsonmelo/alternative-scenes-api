@@ -4,6 +4,7 @@ public class LocalityDto {
 
     private Long id;
     private String name;
+    private String address;
     private CityDto city;
 
     public Long getId() {
@@ -28,5 +29,13 @@ public class LocalityDto {
 
     public void setCity(CityDto city) {
         this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

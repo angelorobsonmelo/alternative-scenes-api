@@ -4,10 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import static java.time.LocalDate.now;
-import static javax.persistence.FetchType.EAGER;
 
 @Entity
 public class Event implements Serializable {
@@ -16,8 +14,6 @@ public class Event implements Serializable {
 
     private Long id;
     private String photoUrl;
-    private String title;
-    private String description;
     private Locality locality;
     private UserApp userApp;
     private Boolean status;
@@ -43,24 +39,6 @@ public class Event implements Serializable {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
-    }
-
-    @Column(nullable = false)
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Column(nullable = false)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -108,6 +86,7 @@ public class Event implements Serializable {
         this.category = category;
     }
 
+
     @ManyToMany
     @JoinTable(name = "musical_genre_event",
             joinColumns = {@JoinColumn(name = "event_id", nullable = false)},
@@ -130,30 +109,9 @@ public class Event implements Serializable {
 
     @PrePersist
     public void prePersist() {
-        final LocalDate now = now();
-        this.registrationDate = now;
+        this.registrationDate = now();
+        this.status = false;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return Objects.equals(id, event.id) &&
-                Objects.equals(photoUrl, event.photoUrl) &&
-                Objects.equals(title, event.title) &&
-                Objects.equals(description, event.description) &&
-                Objects.equals(locality, event.locality) &&
-                Objects.equals(userApp, event.userApp) &&
-                Objects.equals(status, event.status) &&
-                Objects.equals(eventDates, event.eventDates) &&
-                Objects.equals(category, event.category) &&
-                Objects.equals(musicalGenres, event.musicalGenres) &&
-                Objects.equals(registrationDate, event.registrationDate);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, photoUrl, title, description, locality, userApp, status, eventDates, category, musicalGenres, registrationDate);
-    }
 }

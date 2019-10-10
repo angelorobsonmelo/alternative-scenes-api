@@ -40,7 +40,8 @@ CREATE TABLE user_device
 CREATE TABLE locality
 (
   id       BIGSERIAL PRIMARY KEY,
-  name CHARACTER VARYING,
+  name CHARACTER VARYING NOT NULL,
+  address CHARACTER VARYING NOT NULL,
   city_id  INT NOT NULL,
   FOREIGN KEY (city_id) REFERENCES city (id)
 );
@@ -55,8 +56,6 @@ CREATE TABLE event
 (
   id          BIGSERIAL PRIMARY KEY,
   photo_url   CHARACTER VARYING NOT NULL,
-  title       CHARACTER VARYING,
-  description CHARACTER VARYING,
   locality_id INT               NOT NULL,
   user_app_id INT               NOT NULL,
   status      BOOLEAN           NOT NULL,

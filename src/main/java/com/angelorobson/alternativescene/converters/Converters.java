@@ -18,9 +18,7 @@ public class Converters {
         eventDto.setId(event.getId());
         eventDto.setStatus(event.getStatus());
         eventDto.setPhotoUrl(event.getPhotoUrl());
-        eventDto.setTitle(event.getTitle());
         eventDto.setRegistrationDate(event.getRegistrationDate());
-        eventDto.setDescription(event.getDescription());
         eventDto.setLocality(convertLocalityDtoToEntity(event.getLocality()));
         eventDto.setUserApp(convertUserAppEntityToDto(event.getUserApp()));
         eventDto.setEventDates(eventDateDtos);
@@ -28,7 +26,8 @@ public class Converters {
         eventDto.setMusicalGenres(musicalGenreDtos);
         eventDto.setEventDate(getFormatedDates(eventDateDtos));
 
-        String eventLocationFormat = String.format("%s, %s",
+        String eventLocationFormat = String.format("%s - %s, %s",
+                event.getLocality().getName(),
                 event.getLocality().getCity().getName(),
                 event.getLocality().getCity().getState().getUf());
         eventDto.setEventLocation(eventLocationFormat);
@@ -50,6 +49,7 @@ public class Converters {
         LocalityDto localityDto = new LocalityDto();
         localityDto.setId(locality.getId());
         localityDto.setName(locality.getName());
+        localityDto.setAddress(locality.getAddress());
         localityDto.setCity(convertCityDtoToEntity(locality.getCity()));
 
         return localityDto;
@@ -117,7 +117,7 @@ public class Converters {
     }
 
 
-    public static Event converterEventSaveDtoToEntity(EventSaveDto eventSaveDto) {
+    public static Event converterEventSaveDtoToEntity(EventSaveDto eventSaveDto, City city) {
         List<MusicalGenre> musicalGenres = convertMusicalGenresIdsToEntity(eventSaveDto.getMusicalGenres());
 
         UserApp userApp = new UserApp();
@@ -127,25 +127,20 @@ public class Converters {
         category.setId(eventSaveDto.getCategoryId());
 
         State state = new State();
-        state.setId(eventSaveDto.getStateId());
-
-        City city = new City();
-        city.setId(eventSaveDto.getCityId());
+        state.setId(city.getState().getId());
 
         Locality locality = new Locality();
         locality.setCity(city);
         locality.getCity().setState(state);
         locality.setName(eventSaveDto.getLocality());
+        locality.setAddress(eventSaveDto.getAddress());
 
         Event event = new Event();
-        event.setTitle(eventSaveDto.getTitle());
-        event.setDescription(eventSaveDto.getDescription());
         event.setLocality(locality);
-        event.setStatus(false);
         event.setCategory(category);
         event.setMusicalGenres(musicalGenres);
         event.setUserApp(userApp);
-        event.setPhotoUrl("a url da foto vai ser pega aqui no back-end");
+        event.setPhotoUrl(eventSaveDto.getImageUrl());
 
         List<EventDate> eventDates = convertEventDatesListToEntity(eventSaveDto.getEventDates(), event);
 

@@ -4,9 +4,12 @@ package com.angelorobson.alternativescene.controllers;
 import com.angelorobson.alternativescene.converters.Converters;
 import com.angelorobson.alternativescene.dtos.EventDto;
 import com.angelorobson.alternativescene.dtos.EventSaveDto;
+import com.angelorobson.alternativescene.entities.City;
 import com.angelorobson.alternativescene.entities.Event;
+import com.angelorobson.alternativescene.entities.Locality;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
+import com.angelorobson.alternativescene.services.CityService;
 import com.angelorobson.alternativescene.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,10 +34,12 @@ import static org.springframework.http.ResponseEntity.*;
 public class EventController {
 
     private EventService eventService;
+    private CityService cityService;
 
     @Autowired
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, CityService cityService) {
         this.eventService = eventService;
+        this.cityService = cityService;
     }
 
     @PostMapping(value = "/filter")
@@ -56,19 +61,26 @@ public class EventController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
                                                    BindingResult result) {
         Response<EventDto> response = new Response<>();
-        Event event = converterEventSaveDtoToEntity(eventSaveDto);
+        Optional<City> cityReturned = cityService.findByName(eventSaveDto.getCityName());
+
+        if (cityReturned.isPresent()) {
+            Event event = converterEventSaveDtoToEntity(eventSaveDto, cityReturned.get());
+            event = this.eventService.save(event);
+            response.setData(convertEventEntityToDto(event));
+            return ok(response);
+        }
+
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
             return badRequest().body(response);
         }
 
-        event = this.eventService.save(event);
-        response.setData(convertEventEntityToDto(event));
-        return ok(response);
+        return notFound().build();
     }
 
     @GetMapping(value = "{id}")
@@ -128,7 +140,9 @@ public class EventController {
         if (eventSaveDto.getId().isPresent()) {
             Optional<Event> eventReturned = this.eventService.findEventBy(eventSaveDto.getId().get());
             if (eventReturned.isPresent()) {
-                Event toEntity = Converters.converterEventSaveDtoToEntity(eventSaveDto);
+                Locality locality = eventReturned.get().getLocality();
+                City city = locality.getCity();
+                Event toEntity = Converters.converterEventSaveDtoToEntity(eventSaveDto, city);
                 toEntity.setId(eventReturned.get().getId());
                 toEntity.setRegistrationDate(eventReturned.get().getRegistrationDate());
 

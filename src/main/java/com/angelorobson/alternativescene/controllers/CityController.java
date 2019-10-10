@@ -36,7 +36,5 @@ public class CityController {
 
         response.setData(states);
         return ResponseEntity.ok(response);
-
     }
-
 }
