@@ -42,6 +42,8 @@ CREATE TABLE locality
   id       BIGSERIAL PRIMARY KEY,
   name CHARACTER VARYING NOT NULL,
   address CHARACTER VARYING NOT NULL,
+  latitude double  precision NOT NULL,
+  longitude double  precision NOT NULL,
   city_id  INT NOT NULL,
   FOREIGN KEY (city_id) REFERENCES city (id)
 );

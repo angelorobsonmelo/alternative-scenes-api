@@ -1,4 +1,5 @@
-INSERT INTO locality (id, name, address, city_id) VALUES (1, 'Rex Jazz Bar', 'Rua Sá e Albuquerque - Jaraguá, Maceió - AL', 47);
+INSERT INTO locality (id, name, address, latitude, longitude, city_id)
+VALUES (1, 'Rex Jazz Bar', 'Rua Sá e Albuquerque - Jaraguá, Maceió - AL', -9.6708037, -35.7274909,  47);
 
 INSERT INTO category (id, name) VALUES (1, 'Show');
 INSERT INTO category (id, name) VALUES (2, 'Festival');

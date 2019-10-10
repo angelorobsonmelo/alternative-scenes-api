@@ -42,13 +42,13 @@ public class EventController {
         this.cityService = cityService;
     }
 
-    @PostMapping(value = "/filter")
-    public ResponseEntity<Response<Page<EventDto>>> findAllByFilter(
+    @PostMapping(value = "/findAll")
+    public ResponseEntity<Response<Page<EventDto>>> findAll(
             @RequestParam(value = "pag", defaultValue = "0") int pag,
             @RequestParam(value = "ord", defaultValue = "id") String ord,
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
-            @RequestParam(value = "perPage", defaultValue = "25") String perPage,
-            @RequestBody EventFilter eventFilter) {
+            @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
+        EventFilter eventFilter = new EventFilter();
         eventFilter.setStatus(true);
         Response<Page<EventDto>> response = new Response<>();
 

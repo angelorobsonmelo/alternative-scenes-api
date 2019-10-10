@@ -14,6 +14,8 @@ public class Locality implements Serializable {
     private Long id;
     private String name;
     private String address;
+    private Double latitude;
+    private Double Longitude;
     private City city;
 
     @Id
@@ -51,19 +53,38 @@ public class Locality implements Serializable {
         this.city = city;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        Longitude = longitude;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Locality locality1 = (Locality) o;
-        return Objects.equals(id, locality1.id) &&
-                Objects.equals(name, locality1.name) &&
-                Objects.equals(city, locality1.city);
+        Locality locality = (Locality) o;
+        return Objects.equals(id, locality.id) &&
+                Objects.equals(name, locality.name) &&
+                Objects.equals(address, locality.address) &&
+                Objects.equals(latitude, locality.latitude) &&
+                Objects.equals(Longitude, locality.Longitude) &&
+                Objects.equals(city, locality.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, city);
+        return Objects.hash(id, name, address, latitude, Longitude, city);
     }
 
     @Override
@@ -71,6 +92,9 @@ public class Locality implements Serializable {
         return "Locality{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", latitude=" + latitude +
+                ", Longitude=" + Longitude +
                 ", city=" + city +
                 '}';
     }

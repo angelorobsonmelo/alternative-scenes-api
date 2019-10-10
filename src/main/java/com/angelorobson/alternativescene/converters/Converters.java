@@ -50,6 +50,8 @@ public class Converters {
         localityDto.setId(locality.getId());
         localityDto.setName(locality.getName());
         localityDto.setAddress(locality.getAddress());
+        localityDto.setLatitude(locality.getLatitude());
+        localityDto.setLongitude(locality.getLongitude());
         localityDto.setCity(convertCityDtoToEntity(locality.getCity()));
 
         return localityDto;
