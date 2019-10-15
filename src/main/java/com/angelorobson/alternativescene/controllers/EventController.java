@@ -11,16 +11,24 @@ import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.CityService;
 import com.angelorobson.alternativescene.services.EventService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static com.angelorobson.alternativescene.converters.Converters.convertEventEntityToDto;
@@ -62,15 +70,22 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
-                                                   BindingResult result) {
+                                                   BindingResult result) throws IOException {
         Response<EventDto> response = new Response<>();
         Optional<City> cityReturned = cityService.findByName(eventSaveDto.getCityName());
 
         if (cityReturned.isPresent()) {
-            Event event = converterEventSaveDtoToEntity(eventSaveDto, cityReturned.get());
-            event = this.eventService.save(event);
-            response.setData(convertEventEntityToDto(event));
-            return ok(response);
+
+            ResponseEntity<String> responseImageServerUpload = saveImage(eventSaveDto);
+            if (responseImageServerUpload.getStatusCodeValue() == 200) {
+                String imageUrlReturned = getImageUrl(responseImageServerUpload);
+                eventSaveDto.setImageUrl(imageUrlReturned);
+                Event event = converterEventSaveDtoToEntity(eventSaveDto, cityReturned.get());
+                event = this.eventService.save(event);
+
+                response.setData(convertEventEntityToDto(event));
+                return ok(response);
+            }
         }
 
         if (result.hasErrors()) {
@@ -79,6 +94,30 @@ public class EventController {
         }
 
         return notFound().build();
+    }
+
+    private String getImageUrl(ResponseEntity<String> responseImage) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(responseImage.getBody());
+        return rootNode.path("data").path("url").asText();
+    }
+
+    private ResponseEntity<String> saveImage(@RequestBody EventSaveDto eventSaveDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body
+                = new LinkedMultiValueMap<>();
+        body.add("image", eventSaveDto.getImageUrl());
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity
+                = new HttpEntity<>(body, headers);
+
+        String serverUrl = "https://api.imgbb.com/1/upload?key=ce212bfaaa6d25bc1857a69a6b2da17e";
+
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate
+                .postForEntity(serverUrl, requestEntity, String.class);
     }
 
     @GetMapping(value = "{id}")
