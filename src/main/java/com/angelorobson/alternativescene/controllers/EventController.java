@@ -7,19 +7,18 @@ import com.angelorobson.alternativescene.dtos.EventSaveDto;
 import com.angelorobson.alternativescene.entities.City;
 import com.angelorobson.alternativescene.entities.Event;
 import com.angelorobson.alternativescene.entities.Locality;
+import com.angelorobson.alternativescene.entities.UserApp;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.CityService;
 import com.angelorobson.alternativescene.services.EventService;
+import com.angelorobson.alternativescene.services.UserAppService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -43,11 +42,13 @@ public class EventController {
 
     private EventService eventService;
     private CityService cityService;
+    private UserAppService userAppService;
 
     @Autowired
-    public EventController(EventService eventService, CityService cityService) {
+    public EventController(EventService eventService, CityService cityService, UserAppService userAppService) {
         this.eventService = eventService;
         this.cityService = cityService;
+        this.userAppService = userAppService;
     }
 
     @PostMapping(value = "/findAll")
@@ -74,8 +75,9 @@ public class EventController {
         Response<EventDto> response = new Response<>();
         Optional<City> cityReturned = cityService.findByName(eventSaveDto.getCityName());
 
-        if (cityReturned.isPresent()) {
+        Optional<UserApp> userAppReturned = userAppService.findById(eventSaveDto.getUserAppId());
 
+        if (canSave(cityReturned, userAppReturned)) {
             ResponseEntity<String> responseImageServerUpload = saveImage(eventSaveDto);
             if (responseImageServerUpload.getStatusCodeValue() == 200) {
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -98,7 +100,11 @@ public class EventController {
             return badRequest().body(response);
         }
 
-        return notFound().build();
+        return status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    private boolean canSave(Optional<City> cityReturned, Optional<UserApp> userAppReturned) {
+        return cityReturned.isPresent() && userAppReturned.isPresent() && userAppReturned.get().getActivated();
     }
 
     private ResponseEntity<String> saveImage(@RequestBody EventSaveDto eventSaveDto) {

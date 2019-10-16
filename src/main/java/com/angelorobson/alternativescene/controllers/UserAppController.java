@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,8 +38,7 @@ import static com.angelorobson.alternativescene.utils.PasswordUtils.generateBCry
 import static java.util.Optional.of;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.beans.BeanUtils.copyProperties;
-import static org.springframework.http.ResponseEntity.badRequest;
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/users_app")
@@ -92,11 +92,15 @@ public class UserAppController {
         Response<TokenDto> response = new Response<>();
         Optional<UserApp> userApp = this.userAppService.findByEmailAndGoogleAccountId(email, googleAcountId);
 
-        if (userApp.isPresent()) {
+        if (userApp.isPresent() && userApp.get().getActivated()) {
             UserAppDto userAppDto = convertUserAppEntityToDto(userApp.get());
             String token = getToken(userAppDto);
             response.setData(new TokenDto(token, userAppDto));
             return ok(response);
+        }
+
+        if (userApp.isPresent() && !userApp.get().getActivated()) {
+            return status(HttpStatus.FORBIDDEN).build();
         }
 
         response.setData(new TokenDto());
@@ -113,7 +117,7 @@ public class UserAppController {
      */
     @PostMapping
     public ResponseEntity<Response<TokenDto>> save(@Valid @RequestBody UserAppSaveDto userAppSaveDto,
-                                                     BindingResult result) {
+                                                   BindingResult result) {
         log.info("Adding User: {}", userAppSaveDto.toString());
         Response<TokenDto> response = new Response<>();
         validateUser(userAppSaveDto, result);

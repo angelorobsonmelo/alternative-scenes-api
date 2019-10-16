@@ -4,12 +4,10 @@ VALUES (1, 'Rex Jazz Bar', 'Rua Sá e Albuquerque - Jaraguá, Maceió - AL', -9.
 INSERT INTO category (id, name) VALUES (1, 'Show');
 INSERT INTO category (id, name) VALUES (2, 'Festival');
 
-
-INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id,
-                   status, category_id)
+INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id, category_id)
 VALUES (1, 'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
          'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
-        1, 1, false, 2);
+        1, 1, 2);
 
         INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id,
                    status, category_id)

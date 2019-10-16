@@ -34,6 +34,7 @@ public class UserApp implements Serializable {
     private String imageUrl;
     private GenderEnum gender;
     private String phoneNumber;
+    private Boolean activated;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -135,10 +136,19 @@ public class UserApp implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+    @Column(nullable = false)
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
     @PrePersist
     public void prePersist() {
-        final LocalDate now = now();
-        this.registrationDate = now;
+        this.registrationDate = now();
+        this.activated = true;
     }
 
     @Override
@@ -147,6 +157,7 @@ public class UserApp implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         UserApp userApp = (UserApp) o;
         return Objects.equals(id, userApp.id) &&
+                Objects.equals(googleAccountId, userApp.googleAccountId) &&
                 Objects.equals(name, userApp.name) &&
                 Objects.equals(email, userApp.email) &&
                 Objects.equals(password, userApp.password) &&
@@ -154,18 +165,21 @@ public class UserApp implements Serializable {
                 Objects.equals(dateBirth, userApp.dateBirth) &&
                 Objects.equals(registrationDate, userApp.registrationDate) &&
                 Objects.equals(imageUrl, userApp.imageUrl) &&
-                gender == userApp.gender;
+                gender == userApp.gender &&
+                Objects.equals(phoneNumber, userApp.phoneNumber) &&
+                Objects.equals(activated, userApp.activated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, profile, dateBirth, registrationDate, imageUrl, gender);
+        return Objects.hash(id, googleAccountId, name, email, password, profile, dateBirth, registrationDate, imageUrl, gender, phoneNumber, activated);
     }
 
     @Override
     public String toString() {
         return "UserApp{" +
                 "id=" + id +
+                ", googleAccountId='" + googleAccountId + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
@@ -174,6 +188,8 @@ public class UserApp implements Serializable {
                 ", registrationDate=" + registrationDate +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", gender=" + gender +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", activated=" + activated +
                 '}';
     }
 }
