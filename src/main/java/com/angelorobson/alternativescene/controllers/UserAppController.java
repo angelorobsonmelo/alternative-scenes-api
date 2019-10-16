@@ -95,7 +95,7 @@ public class UserAppController {
         if (userApp.isPresent()) {
             UserAppDto userAppDto = convertUserAppEntityToDto(userApp.get());
             String token = getToken(userAppDto);
-            response.setData(new TokenDto(token));
+            response.setData(new TokenDto(token, userAppDto));
             return ok(response);
         }
 
@@ -127,7 +127,7 @@ public class UserAppController {
 
         UserAppDto userAppDto = this.userAppService.persist(userApp);
         String token = getToken(userAppDto);
-        response.setData(new TokenDto(token));
+        response.setData(new TokenDto(token, userAppDto));
         return ok(response);
     }
 

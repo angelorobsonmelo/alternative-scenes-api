@@ -20,7 +20,8 @@ public class Converters {
         EventDto eventDto = new EventDto();
         eventDto.setId(event.getId());
         eventDto.setStatus(event.getStatus());
-        eventDto.setPhotoUrl(event.getPhotoUrl());
+        eventDto.setImageUrl(event.getImageUrl());
+        eventDto.setImageThumbUrl(event.getImageThumbUrl());
         eventDto.setRegistrationDate(event.getRegistrationDate());
         eventDto.setLocality(convertLocalityDtoToEntity(event.getLocality()));
         eventDto.setUserApp(convertUserAppEntityToDto(event.getUserApp()));
@@ -150,7 +151,8 @@ public class Converters {
         event.setCategory(category);
         event.setMusicalGenres(musicalGenres);
         event.setUserApp(userApp);
-        event.setPhotoUrl(eventSaveDto.getImageUrl());
+        event.setImageUrl(eventSaveDto.getImageUrl());
+        event.setImageThumbUrl(eventSaveDto.getImageThumbUrl());
 
         List<EventDate> eventDates = convertEventDatesListToEntity(eventSaveDto.getEventDates(), event);
 

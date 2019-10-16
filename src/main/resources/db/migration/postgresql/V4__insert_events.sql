@@ -4,24 +4,29 @@ VALUES (1, 'Rex Jazz Bar', 'Rua Sá e Albuquerque - Jaraguá, Maceió - AL', -9.
 INSERT INTO category (id, name) VALUES (1, 'Show');
 INSERT INTO category (id, name) VALUES (2, 'Festival');
 
-INSERT INTO event (id, photo_url, locality_id, user_app_id,
+
+INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id,
                    status, category_id)
 VALUES (1, 'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
+         'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
         1, 1, false, 2);
 
-        INSERT INTO event (id, photo_url, locality_id, user_app_id,
+        INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id,
                    status, category_id)
 VALUES (2, 'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
+'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
         1, 1, true, 1);
 
-         INSERT INTO event (id, photo_url, locality_id, user_app_id,
+         INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id,
                    status, category_id)
 VALUES (3, 'https://i.pinimg.com/originals/62/78/1e/62781ef2c651d2de4f37c6f5524660ab.jpg',
+        'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
         1, 1, true, 1);
 
-        INSERT INTO event (id, photo_url, locality_id, user_app_id,
+        INSERT INTO event (id, image_url, image_thumb_url, locality_id, user_app_id,
                    status, category_id)
 VALUES (4, 'https://previews.customer.envatousercontent.com/files/29437985/590-blackened.png',
+        'https://70000tons.com/wp-content/uploads/2017/05/70kt2018_originalstamp.jpg',
         1, 1, true, 1);
 
 INSERT INTO event_date (id, date, event_hour, event_id) VALUES (1, '2018-05-06', '19:00HS', 1);

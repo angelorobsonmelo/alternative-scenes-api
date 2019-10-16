@@ -57,7 +57,8 @@ CREATE TABLE category
 CREATE TABLE event
 (
   id          BIGSERIAL PRIMARY KEY,
-  photo_url   CHARACTER VARYING NOT NULL,
+  image_url   CHARACTER VARYING NOT NULL,
+  image_thumb_url  CHARACTER VARYING NOT NULL,
   locality_id INT               NOT NULL,
   user_app_id INT               NOT NULL,
   status      BOOLEAN           NOT NULL,

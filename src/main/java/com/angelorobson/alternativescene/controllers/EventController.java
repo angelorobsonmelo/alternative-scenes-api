@@ -78,8 +78,13 @@ public class EventController {
 
             ResponseEntity<String> responseImageServerUpload = saveImage(eventSaveDto);
             if (responseImageServerUpload.getStatusCodeValue() == 200) {
-                String imageUrlReturned = getImageUrl(responseImageServerUpload);
-                eventSaveDto.setImageUrl(imageUrlReturned);
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(responseImageServerUpload.getBody());
+                String imageUrl = rootNode.path("data").path("url").asText();
+                String thumbUrl = rootNode.path("data").path("thumb").path("url").asText();
+
+                eventSaveDto.setImageUrl(imageUrl);
+                eventSaveDto.setImageThumbUrl(thumbUrl);
                 Event event = converterEventSaveDtoToEntity(eventSaveDto, cityReturned.get());
                 event = this.eventService.save(event);
 
@@ -94,12 +99,6 @@ public class EventController {
         }
 
         return notFound().build();
-    }
-
-    private String getImageUrl(ResponseEntity<String> responseImage) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(responseImage.getBody());
-        return rootNode.path("data").path("url").asText();
     }
 
     private ResponseEntity<String> saveImage(@RequestBody EventSaveDto eventSaveDto) {

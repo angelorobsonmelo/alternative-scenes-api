@@ -15,6 +15,7 @@ public class EventSaveDto {
     private List<DateEventSaveDto> eventDates;
     private String cityName;
     private String imageUrl;
+    private String imageThumbUrl;
 
     public Optional<Long> getId() {
         return id;
@@ -88,6 +89,14 @@ public class EventSaveDto {
         this.latitude = latitude;
     }
 
+    public String getImageThumbUrl() {
+        return imageThumbUrl;
+    }
+
+    public void setImageThumbUrl(String imageThumbUrl) {
+        this.imageThumbUrl = imageThumbUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,12 +110,13 @@ public class EventSaveDto {
                 Objects.equals(userAppId, that.userAppId) &&
                 Objects.equals(eventDates, that.eventDates) &&
                 Objects.equals(cityName, that.cityName) &&
-                Objects.equals(imageUrl, that.imageUrl);
+                Objects.equals(imageUrl, that.imageUrl) &&
+                Objects.equals(imageThumbUrl, that.imageThumbUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, locality, address, longitude, latitude, userAppId, eventDates, cityName, imageUrl);
+        return Objects.hash(id, locality, address, longitude, latitude, userAppId, eventDates, cityName, imageUrl, imageThumbUrl);
     }
 
     @Override
@@ -121,6 +131,7 @@ public class EventSaveDto {
                 ", eventDates=" + eventDates +
                 ", cityName='" + cityName + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", imageThumbUrl='" + imageThumbUrl + '\'' +
                 '}';
     }
 }

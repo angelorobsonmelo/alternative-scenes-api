@@ -7,7 +7,8 @@ import java.util.List;
 public class EventDto {
 
     private Long id;
-    private String photoUrl;
+    private String imageUrl;
+    private String imageThumbUrl;
     private LocalityDto locality;
     private List<EventDateDto> eventDates;
     private List<MusicalGenreDto> musicalGenres;
@@ -26,12 +27,20 @@ public class EventDto {
         this.id = id;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageThumbUrl() {
+        return imageThumbUrl;
+    }
+
+    public void setImageThumbUrl(String imageThumbUrl) {
+        this.imageThumbUrl = imageThumbUrl;
     }
 
     public LocalityDto getLocality() {

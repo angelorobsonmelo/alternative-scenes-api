@@ -13,7 +13,8 @@ public class Event implements Serializable {
     private static final long serialVersionUID = -3534895515963460853L;
 
     private Long id;
-    private String photoUrl;
+    private String imageUrl;
+    private String imageThumbUrl;
     private Locality locality;
     private UserApp userApp;
     private Boolean status;
@@ -33,12 +34,21 @@ public class Event implements Serializable {
     }
 
     @Column(nullable = false)
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @Column(nullable = false)
+    public String getImageThumbUrl() {
+        return imageThumbUrl;
+    }
+
+    public void setImageThumbUrl(String imageThumbUrl) {
+        this.imageThumbUrl = imageThumbUrl;
     }
 
     @ManyToOne(cascade = CascadeType.ALL)
