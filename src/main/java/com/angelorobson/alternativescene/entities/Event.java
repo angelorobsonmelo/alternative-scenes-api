@@ -1,9 +1,12 @@
 package com.angelorobson.alternativescene.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static java.time.LocalDate.now;
 
@@ -22,6 +25,7 @@ public class Event implements Serializable {
     private Category category;
     private List<MusicalGenre> musicalGenres;
     private LocalDate registrationDate;
+    private Favorite favorite;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -78,7 +82,7 @@ public class Event implements Serializable {
     }
 
 
-    @OneToMany(mappedBy = "event", orphanRemoval = true, fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public List<EventDate> getEventDates() {
         return eventDates;
     }
@@ -117,11 +121,59 @@ public class Event implements Serializable {
         this.registrationDate = registrationDate;
     }
 
+    @OneToOne(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonIgnore
+    public Favorite getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Favorite favorite) {
+        this.favorite = favorite;
+    }
+
     @PrePersist
     public void prePersist() {
         this.registrationDate = now();
         this.status = false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(id, event.id) &&
+                Objects.equals(imageUrl, event.imageUrl) &&
+                Objects.equals(imageThumbUrl, event.imageThumbUrl) &&
+                Objects.equals(locality, event.locality) &&
+                Objects.equals(userApp, event.userApp) &&
+                Objects.equals(status, event.status) &&
+                Objects.equals(eventDates, event.eventDates) &&
+                Objects.equals(category, event.category) &&
+                Objects.equals(musicalGenres, event.musicalGenres) &&
+                Objects.equals(registrationDate, event.registrationDate) &&
+                Objects.equals(favorite, event.favorite);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, imageUrl, imageThumbUrl, locality, userApp, status, eventDates, category, musicalGenres, registrationDate, favorite);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", imageThumbUrl='" + imageThumbUrl + '\'' +
+                ", locality=" + locality +
+                ", userApp=" + userApp +
+                ", status=" + status +
+                ", eventDates=" + eventDates +
+                ", category=" + category +
+                ", musicalGenres=" + musicalGenres +
+                ", registrationDate=" + registrationDate +
+                ", favorite=" + favorite +
+                '}';
+    }
 }

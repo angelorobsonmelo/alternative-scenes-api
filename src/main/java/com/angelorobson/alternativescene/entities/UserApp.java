@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDate.*;
@@ -35,6 +36,7 @@ public class UserApp implements Serializable {
     private GenderEnum gender;
     private String phoneNumber;
     private Boolean activated;
+    private List<Favorite> favorites;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -145,6 +147,15 @@ public class UserApp implements Serializable {
         this.activated = activated;
     }
 
+    @OneToMany(mappedBy = "userApp", fetch = FetchType.LAZY)
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
+    }
+
     @PrePersist
     public void prePersist() {
         this.registrationDate = now();
@@ -167,12 +178,13 @@ public class UserApp implements Serializable {
                 Objects.equals(imageUrl, userApp.imageUrl) &&
                 gender == userApp.gender &&
                 Objects.equals(phoneNumber, userApp.phoneNumber) &&
-                Objects.equals(activated, userApp.activated);
+                Objects.equals(activated, userApp.activated) &&
+                Objects.equals(favorites, userApp.favorites);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, googleAccountId, name, email, password, profile, dateBirth, registrationDate, imageUrl, gender, phoneNumber, activated);
+        return Objects.hash(id, googleAccountId, name, email, password, profile, dateBirth, registrationDate, imageUrl, gender, phoneNumber, activated, favorites);
     }
 
     @Override
@@ -190,6 +202,7 @@ public class UserApp implements Serializable {
                 ", gender=" + gender +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", activated=" + activated +
+                ", favorites=" + favorites +
                 '}';
     }
 }
