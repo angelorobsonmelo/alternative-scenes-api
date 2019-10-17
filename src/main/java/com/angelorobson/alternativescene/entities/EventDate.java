@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 public class EventDate implements Serializable {
 
@@ -54,7 +56,7 @@ public class EventDate implements Serializable {
         this.event = event;
     }
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "eventDate")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "eventDate", fetch = LAZY)
     public PriceDate getPriceDate() {
         return priceDate;
     }

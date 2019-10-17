@@ -24,7 +24,7 @@ public class Favorite implements Serializable {
         this.id = id;
     }
 
-    @OneToOne
+    @ManyToOne
     public Event getEvent() {
         return event;
     }

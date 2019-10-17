@@ -1,7 +1,5 @@
 package com.angelorobson.alternativescene.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDate.now;
+import static javax.persistence.FetchType.*;
 
 @Entity
 public class Event implements Serializable {
@@ -25,7 +24,7 @@ public class Event implements Serializable {
     private Category category;
     private List<MusicalGenre> musicalGenres;
     private LocalDate registrationDate;
-    private Favorite favorite;
+    private List<Favorite> favorites;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,7 +63,7 @@ public class Event implements Serializable {
         this.locality = locality;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     public UserApp getUserApp() {
         return userApp;
     }
@@ -82,7 +81,7 @@ public class Event implements Serializable {
     }
 
 
-    @OneToMany(mappedBy = "event", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", orphanRemoval = true, fetch = EAGER, cascade = CascadeType.ALL)
     public List<EventDate> getEventDates() {
         return eventDates;
     }
@@ -91,7 +90,7 @@ public class Event implements Serializable {
         this.eventDates = eventDates;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     public Category getCategory() {
         return category;
     }
@@ -101,7 +100,7 @@ public class Event implements Serializable {
     }
 
 
-    @ManyToMany
+    @ManyToMany(fetch = LAZY)
     @JoinTable(name = "musical_genre_event",
             joinColumns = {@JoinColumn(name = "event_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "musical_genre_id", nullable = false)})
@@ -121,14 +120,13 @@ public class Event implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    @OneToOne(mappedBy = "event", fetch = FetchType.LAZY)
-    @JsonIgnore
-    public Favorite getFavorite() {
-        return favorite;
+    @OneToMany(mappedBy = "event", fetch = LAZY)
+    public List<Favorite> getFavorites() {
+        return favorites;
     }
 
-    public void setFavorite(Favorite favorite) {
-        this.favorite = favorite;
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
     @PrePersist
@@ -152,12 +150,12 @@ public class Event implements Serializable {
                 Objects.equals(category, event.category) &&
                 Objects.equals(musicalGenres, event.musicalGenres) &&
                 Objects.equals(registrationDate, event.registrationDate) &&
-                Objects.equals(favorite, event.favorite);
+                Objects.equals(favorites, event.favorites);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, imageUrl, imageThumbUrl, locality, userApp, status, eventDates, category, musicalGenres, registrationDate, favorite);
+        return Objects.hash(id, imageUrl, imageThumbUrl, locality, userApp, status, eventDates, category, musicalGenres, registrationDate, favorites);
     }
 
     @Override
@@ -173,7 +171,7 @@ public class Event implements Serializable {
                 ", category=" + category +
                 ", musicalGenres=" + musicalGenres +
                 ", registrationDate=" + registrationDate +
-                ", favorite=" + favorite +
+                ", favorite=" + favorites +
                 '}';
     }
 }
