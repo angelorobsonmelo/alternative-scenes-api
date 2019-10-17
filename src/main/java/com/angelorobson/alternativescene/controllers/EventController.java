@@ -80,16 +80,7 @@ public class EventController {
         if (canSave(cityReturned, userAppReturned)) {
             ResponseEntity<String> responseImageServerUpload = saveImage(eventSaveDto);
             if (responseImageServerUpload.getStatusCodeValue() == 200) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode rootNode = objectMapper.readTree(responseImageServerUpload.getBody());
-                String imageUrl = rootNode.path("data").path("url").asText();
-                String thumbUrl = rootNode.path("data").path("thumb").path("url").asText();
-
-                eventSaveDto.setImageUrl(imageUrl);
-                eventSaveDto.setImageThumbUrl(thumbUrl);
-                Event event = converterEventSaveDtoToEntity(eventSaveDto, cityReturned.get());
-                event = this.eventService.save(event);
-
+                Event event = saveEventWithImageUrl(eventSaveDto, cityReturned.get(), responseImageServerUpload);
                 response.setData(convertEventEntityToDto(event));
                 return ok(response);
             }
@@ -101,6 +92,19 @@ public class EventController {
         }
 
         return status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    private Event saveEventWithImageUrl(EventSaveDto eventSaveDto, City cityReturned, ResponseEntity<String> responseImageServerUpload) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(responseImageServerUpload.getBody());
+        String imageUrl = rootNode.path("data").path("url").asText();
+        String thumbUrl = rootNode.path("data").path("thumb").path("url").asText();
+
+        eventSaveDto.setImageUrl(imageUrl);
+        eventSaveDto.setImageThumbUrl(thumbUrl);
+        Event event = converterEventSaveDtoToEntity(eventSaveDto, cityReturned);
+        event = this.eventService.save(event);
+        return event;
     }
 
     private boolean canSave(Optional<City> cityReturned, Optional<UserApp> userAppReturned) {
