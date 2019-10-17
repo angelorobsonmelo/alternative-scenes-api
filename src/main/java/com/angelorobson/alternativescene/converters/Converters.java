@@ -4,18 +4,16 @@ import com.angelorobson.alternativescene.dtos.*;
 import com.angelorobson.alternativescene.entities.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class Converters {
 
     public static EventDto convertEventEntityToDto(Event event) {
-        List<EventDateDto> eventDateDtos = event.getEventDates().stream().map(Converters::convertEventDateEntityToDto).collect(toList());
-        List<MusicalGenreDto> musicalGenreDtos = event.getMusicalGenres().stream().map(Converters::convertMusicalGenreDtoEntityToDto).collect(toList());
+        List<EventDateDto> eventDateDtos = getEventDatesDto(event);
+        List<MusicalGenreDto> musicalGenreDtos = getMusicalGenresDto(event);
 
         EventDto eventDto = new EventDto();
         eventDto.setId(event.getId());
@@ -37,6 +35,47 @@ public class Converters {
         eventDto.setEventLocation(eventLocationFormat);
 
         return eventDto;
+    }
+
+    private static List<MusicalGenreDto> getMusicalGenresDto(Event event) {
+        return event.getMusicalGenres().stream().map(Converters::convertMusicalGenreDtoEntityToDto).collect(toList());
+    }
+
+    public static EventDto convertEventEntityWithFavoriteToDto(Event event, List<Favorite> favorites) {
+        List<EventDateDto> eventDateDtos = getEventDatesDto(event);
+        List<MusicalGenreDto> musicalGenreDtos = getMusicalGenresDto(event);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setId(event.getId());
+        eventDto.setStatus(event.getStatus());
+        eventDto.setImageUrl(event.getImageUrl());
+        eventDto.setImageThumbUrl(event.getImageThumbUrl());
+        eventDto.setRegistrationDate(event.getRegistrationDate());
+        eventDto.setLocality(convertLocalityDtoToEntity(event.getLocality()));
+        eventDto.setUserApp(convertUserAppEntityToDto(event.getUserApp()));
+        eventDto.setEventDates(eventDateDtos);
+        eventDto.setCategory(convertCategoryDtoToEntity(event.getCategory()));
+        eventDto.setMusicalGenres(musicalGenreDtos);
+        eventDto.setEventDate(getFormatedDates(eventDateDtos));
+
+        String eventLocationFormat = String.format("%s - %s, %s",
+                event.getLocality().getName(),
+                event.getLocality().getCity().getName(),
+                event.getLocality().getCity().getState().getUf());
+        eventDto.setEventLocation(eventLocationFormat);
+
+        eventDto.setFavorite(false);
+        favorites.forEach(favorite -> {
+            if (favorite.getEvent().getId().equals(event.getId())) {
+                eventDto.setFavorite(true);
+            }
+        });
+
+        return eventDto;
+    }
+
+    private static List<EventDateDto> getEventDatesDto(Event event) {
+        return event.getEventDates().stream().map(Converters::convertEventDateEntityToDto).collect(toList());
     }
 
     private static String getFormatedDates(List<EventDateDto> eventDateDtos) {

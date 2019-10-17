@@ -12,6 +12,8 @@ public interface EventService {
 
     Page<EventDto> findAllByFilter(EventFilter eventFilter, Pageable pageable);
 
+    Page<EventDto> findAllByUser(EventFilter eventFilter, Pageable pageable,  Long userAppId);
+
     Event save(Event event);
 
     Optional<EventDto> findOne(Long id);

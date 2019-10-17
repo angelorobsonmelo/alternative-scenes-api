@@ -18,6 +18,7 @@ public class EventDto {
     private UserAppDto userApp;
     private String eventDate;
     private String eventLocation;
+    private Boolean isFavorite;
 
     public Long getId() {
         return id;
@@ -116,5 +117,13 @@ public class EventDto {
 
     public void setEventLocation(String eventLocation) {
         this.eventLocation = eventLocation;
+    }
+
+    public Boolean getFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        isFavorite = favorite;
     }
 }
