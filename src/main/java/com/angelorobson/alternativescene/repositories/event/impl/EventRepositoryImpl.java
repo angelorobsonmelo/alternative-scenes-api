@@ -34,6 +34,7 @@ public class EventRepositoryImpl implements EventRepositoryQuery {
 
         Predicate[] predicates = createConstraints(eventFilter, builder, root);
         criteria.where(predicates);
+        criteria.orderBy(builder.desc(root.get(Event_.registrationDate)));
 
         TypedQuery<Event> query = manager.createQuery(criteria);
 

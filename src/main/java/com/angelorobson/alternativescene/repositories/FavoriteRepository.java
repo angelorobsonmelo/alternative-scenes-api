@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
+public interface FavoriteRepository extends JpaRepository<Favorite, Long>, FavoriteRepositoryQuery {
 
     Favorite findFavoriteByEventIdAndUserAppId(Long eventId, Long userAppId);
     List<Favorite> findAllByUserAppIn(UserApp userApp);
