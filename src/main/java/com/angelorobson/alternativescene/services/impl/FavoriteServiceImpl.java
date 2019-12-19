@@ -49,6 +49,6 @@ public class FavoriteServiceImpl implements FavoriteService {
         UserApp userApp = new UserApp();
         userApp.setId(UserAppId);
         Page<Favorite> favoritePage = favoriteRepository.findAllPagedByUser(userApp, pageable);
-        return favoritePage.map(favorite -> Converters.convertEventEntityToDto(favorite.getEvent()));
+        return favoritePage.map(favorite -> Converters.convertEventEntityWithFavoriteTrueToDto(favorite.getEvent()));
     }
 }
