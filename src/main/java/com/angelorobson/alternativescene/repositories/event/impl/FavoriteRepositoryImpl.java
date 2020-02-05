@@ -1,9 +1,6 @@
 package com.angelorobson.alternativescene.repositories.event.impl;
 
-import com.angelorobson.alternativescene.entities.Event;
-import com.angelorobson.alternativescene.entities.Favorite;
-import com.angelorobson.alternativescene.entities.Favorite_;
-import com.angelorobson.alternativescene.entities.UserApp;
+import com.angelorobson.alternativescene.entities.*;
 import com.angelorobson.alternativescene.repositories.FavoriteRepositoryQuery;
 import com.angelorobson.alternativescene.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +44,9 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryQuery {
     private Predicate[] createConstraints(UserApp userApp, CriteriaBuilder builder, Root<Favorite> root) {
         List<Predicate> predicates = new ArrayList<>();
 
-        Join<Favorite, Event> favoriteEventJoin = root.join(Favorite_.EVENT);
-
         if (userApp.getId() != null) {
             predicates.add(
-                    builder.equal(favoriteEventJoin.get(Favorite_.USER_APP), userApp.getId()));
+                    builder.equal(root.get(Favorite_.USER_APP), userApp.getId()));
         }
 
         return predicates.toArray(new Predicate[predicates.size()]);
