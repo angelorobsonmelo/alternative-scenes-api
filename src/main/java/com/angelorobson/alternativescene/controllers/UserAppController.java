@@ -1,5 +1,6 @@
 package com.angelorobson.alternativescene.controllers;
 
+import com.angelorobson.alternativescene.constants.Constants.AuthoritiesConstants;
 import com.angelorobson.alternativescene.dtos.UserAppDto;
 import com.angelorobson.alternativescene.dtos.UserAppEditDto;
 import com.angelorobson.alternativescene.dtos.UserAppSaveDto;
@@ -152,7 +153,7 @@ public class UserAppController {
      * @return ResponseEntity<Response < String>>
      */
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Response<String>> remove(@PathVariable("id") Long id) {
         log.info("Removendo lançamento: {}", id);
         Response<String> response = new Response<>();
