@@ -69,6 +69,26 @@ public class EventController {
         return ok(response);
     }
 
+
+    @PostMapping(value = "/findAllByAdmin")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Response<Page<EventDto>>> findAllByAdmin(
+            @RequestParam(value = "pag", defaultValue = "0") int pag,
+            @RequestParam(value = "ord", defaultValue = "id") String ord,
+            @RequestParam(value = "dir", defaultValue = "ASC") String dir,
+            @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
+        EventFilter eventFilter = new EventFilter();
+        eventFilter.setStatus(false);
+        Response<Page<EventDto>> response = new Response<>();
+
+        PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);
+
+        Page<EventDto> eventsReturned = this.eventService.findAllByFilter(eventFilter, pageRequest);
+
+        response.setData(eventsReturned);
+        return ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<Response<EventDto>> save(@RequestBody EventSaveDto eventSaveDto,
                                                    BindingResult result) throws IOException {
