@@ -189,6 +189,23 @@ public class EventController {
         return ok(response);
     }
 
+    @PutMapping(value = "/activateOrDeactivate/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Response<EventDto>> activateOrDeactivate(@PathVariable("id") Long id,
+                                                                   @RequestParam(value = "active") Boolean active) {
+        Response<EventDto> response = new Response<>();
+        EventSaveDto eventSaveDto = new EventSaveDto();
+        eventSaveDto.setId(Optional.of(id));
+
+        Event event = eventService.findEventBy(id).get();
+        event.setStatus(active);
+
+        event = this.eventService.save(event);
+
+        response.setData(convertEventEntityToDto(event));
+        return ok(response);
+    }
+
     @PostMapping(value = "/findAllByUserId")
     public ResponseEntity<Response<Page<EventDto>>> findAllByUserId(
             @RequestParam(value = "pag", defaultValue = "0") int pag,
