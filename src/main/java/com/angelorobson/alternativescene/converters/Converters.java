@@ -276,4 +276,8 @@ public class Converters {
 
         return eventDates;
     }
+
+    public static UserDevice convertDtoToEntity(UserDeviceSaveDto userDeviceSaveDto) {
+        return new UserDevice(userDeviceSaveDto.getUserId(), userDeviceSaveDto.getDeviceId());
+    }
 }

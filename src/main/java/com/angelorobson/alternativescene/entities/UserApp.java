@@ -37,6 +37,7 @@ public class UserApp implements Serializable {
     private String phoneNumber;
     private Boolean activated;
     private List<Favorite> favorites;
+    private List<UserDevice> userDeviceList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -154,6 +155,15 @@ public class UserApp implements Serializable {
 
     public void setFavorites(List<Favorite> favorites) {
         this.favorites = favorites;
+    }
+
+    @OneToMany(mappedBy = "userApp", fetch = FetchType.LAZY)
+    public List<UserDevice> getUserDeviceList() {
+        return userDeviceList;
+    }
+
+    public void setUserDeviceList(List<UserDevice> userDeviceList) {
+        this.userDeviceList = userDeviceList;
     }
 
     @PrePersist
