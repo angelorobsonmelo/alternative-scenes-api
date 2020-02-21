@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/userDevices")
@@ -23,15 +25,24 @@ public class UserDeviceController {
     @PostMapping
     public ResponseEntity<Response<Boolean>> save(@RequestBody UserDeviceSaveDto dto) {
         Response<Boolean> response = new Response<>();
+
+        Optional<UserDevice> userDeviceReturned = service.findByDeviceId(dto.getDeviceId());
+
+        if (userDeviceReturned.isPresent()) {
+            response.setData(true);
+            return ResponseEntity.ok(response);
+        }
+
         UserDevice userDevice = service.save(dto);
 
         if (userDevice.getId() != null) {
-            response.setData(true);
             return ResponseEntity.ok(response);
         }
 
         response.setData(false);
         return ResponseEntity.ok(response);
     }
+
+
 
 }
