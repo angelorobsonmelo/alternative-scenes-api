@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StateServiceImpl implements StateSerivice {
@@ -22,5 +23,10 @@ public class StateServiceImpl implements StateSerivice {
     public List<State> findAll() {
         log.info("Get all states");
         return stateRepository.findAll();
+    }
+
+    @Override
+    public Optional<State> findOne(Long id) {
+        return stateRepository.findById(id);
     }
 }

@@ -4,17 +4,16 @@ package com.angelorobson.alternativescene.controllers;
 import com.angelorobson.alternativescene.converters.Converters;
 import com.angelorobson.alternativescene.dtos.EventDto;
 import com.angelorobson.alternativescene.dtos.EventSaveDto;
-import com.angelorobson.alternativescene.entities.City;
-import com.angelorobson.alternativescene.entities.Event;
-import com.angelorobson.alternativescene.entities.Locality;
-import com.angelorobson.alternativescene.entities.UserApp;
+import com.angelorobson.alternativescene.entities.*;
+import com.angelorobson.alternativescene.entities.notification.Notification;
+import com.angelorobson.alternativescene.entities.notification.Sender;
+import com.angelorobson.alternativescene.enums.ProfileEnum;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
-import com.angelorobson.alternativescene.services.CityService;
-import com.angelorobson.alternativescene.services.EventService;
-import com.angelorobson.alternativescene.services.UserAppService;
+import com.angelorobson.alternativescene.services.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +27,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.angelorobson.alternativescene.converters.Converters.convertEventEntityToDto;
 import static com.angelorobson.alternativescene.converters.Converters.converterEventSaveDtoToEntity;
@@ -43,12 +47,20 @@ public class EventController {
     private EventService eventService;
     private CityService cityService;
     private UserAppService userAppService;
+    private UserDeviceService userDeviceService;
+    private StateSerivice stateSerivice;
 
     @Autowired
-    public EventController(EventService eventService, CityService cityService, UserAppService userAppService) {
+    public EventController(EventService eventService,
+                           CityService cityService,
+                           UserAppService userAppService,
+                           UserDeviceService userDeviceService,
+                           StateSerivice stateSerivice) {
         this.eventService = eventService;
         this.cityService = cityService;
         this.userAppService = userAppService;
+        this.userDeviceService = userDeviceService;
+        this.stateSerivice = stateSerivice;
     }
 
     @PostMapping(value = "/findAll")
@@ -101,7 +113,18 @@ public class EventController {
             ResponseEntity<String> responseImageServerUpload = saveImage(eventSaveDto);
             if (responseImageServerUpload.getStatusCodeValue() == 200) {
                 Event event = saveEventWithImageUrl(eventSaveDto, cityReturned.get(), responseImageServerUpload);
-                response.setData(convertEventEntityToDto(event));
+                Locality locality = event.getLocality();
+                City city = locality.getCity();
+                State state = city.getState();
+
+                Optional<State> stateReturned = stateSerivice.findOne(state.getId());
+                event.getLocality().getCity().setState(stateReturned.get());
+
+
+                EventDto eventDto = convertEventEntityToDto(event);
+                response.setData(eventDto);
+                sendNotificationByUserDevice(eventDto);
+
                 return ok(response);
             }
         }
@@ -254,6 +277,48 @@ public class EventController {
         }
 
         return new Event();
+    }
+
+
+    private void sendNotificationByUserDevice(EventDto eventDto) {
+        List<UserDevice> userDevices = userDeviceService.findAllByUserProfile(ProfileEnum.ROLE_ADMIN);
+        List<String> devicesIds = userDevices.stream().map(UserDevice::getDeviceId).collect(Collectors.toList());
+
+        sendNotification(eventDto, devicesIds);
+    }
+
+    private void sendNotification(EventDto eventDto, List<String> usersDevicesIds) {
+        HttpHeaders headers = new HttpHeaders();
+        Sender<EventDto> eventSender = new Sender<>();
+        Notification notification = new Notification();
+
+        String authorization = "key={0}";
+        String headerAuthorization = MessageFormat.format(authorization,
+                "AAAAsimAgCE:APA91bG7upq7kCkpXPeGzUOsvOVhEYCTflrHOxdhrrwVK3LeK1BdD2sQe4_pzasURelxWP6OLrZSMhualXjG_ZtEsdTr84-2gH1JaGoqmtspalw8wrLumcasyyJFf_YhFaok3dp33Gu7");
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", headerAuthorization);
+
+
+        notification.setTitle("Novo evento adicionado");
+        String bodyMsg = "{0}, em {1}";
+        notification.setBody(MessageFormat.format(bodyMsg, eventDto.getEventDate(), eventDto.getEventLocation()));
+        notification.setImage(eventDto.getImageThumbUrl());
+        notification.setIcon(eventDto.getImageThumbUrl());
+
+        eventSender.setRegistrationIds(usersDevicesIds);
+        eventSender.setNotification(notification);
+        eventSender.setData(eventDto);
+
+        String Bodycontent = new Gson().toJson(eventSender);
+
+        HttpEntity<String> requestEntity
+                = new HttpEntity<>(Bodycontent, headers);
+
+        String serverUrl = "https://fcm.googleapis.com/fcm/send";
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForEntity(serverUrl, requestEntity, String.class);
     }
 
 }
