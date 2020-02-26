@@ -8,7 +8,6 @@ public class Sender<T> {
 
     @SerializedName("registration_ids")
     private List<String> registrationIds;
-    private Notification notification;
     private String to;
     private T data;
 
@@ -20,13 +19,6 @@ public class Sender<T> {
         this.to = to;
     }
 
-    public Notification getNotification() {
-        return notification;
-    }
-
-    public void setNotification(Notification notification) {
-        this.notification = notification;
-    }
 
     public T getData() {
         return data;

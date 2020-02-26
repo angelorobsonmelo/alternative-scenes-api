@@ -5,7 +5,6 @@ import com.angelorobson.alternativescene.converters.Converters;
 import com.angelorobson.alternativescene.dtos.EventDto;
 import com.angelorobson.alternativescene.dtos.EventSaveDto;
 import com.angelorobson.alternativescene.entities.*;
-import com.angelorobson.alternativescene.entities.notification.Notification;
 import com.angelorobson.alternativescene.entities.notification.Sender;
 import com.angelorobson.alternativescene.enums.ProfileEnum;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
@@ -28,8 +27,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -290,7 +287,6 @@ public class EventController {
     private void sendNotification(EventDto eventDto, List<String> usersDevicesIds) {
         HttpHeaders headers = new HttpHeaders();
         Sender<EventDto> eventSender = new Sender<>();
-        Notification notification = new Notification();
 
         String authorization = "key={0}";
         String headerAuthorization = MessageFormat.format(authorization,
@@ -299,15 +295,7 @@ public class EventController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", headerAuthorization);
 
-
-        notification.setTitle("Novo evento adicionado");
-        String bodyMsg = "{0}, em {1}";
-        notification.setBody(MessageFormat.format(bodyMsg, eventDto.getEventDate(), eventDto.getEventLocation()));
-        notification.setImage(eventDto.getImageThumbUrl());
-        notification.setIcon(eventDto.getImageThumbUrl());
-
         eventSender.setRegistrationIds(usersDevicesIds);
-        eventSender.setNotification(notification);
         eventSender.setData(eventDto);
 
         String Bodycontent = new Gson().toJson(eventSender);
