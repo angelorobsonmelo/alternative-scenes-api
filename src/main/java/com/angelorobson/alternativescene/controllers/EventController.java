@@ -120,7 +120,7 @@ public class EventController {
 
                 EventDto eventDto = convertEventEntityToDto(event);
                 response.setData(eventDto);
-                sendNotificationByUserDevice(eventDto);
+                sendNotificationByUserDevice(eventDto, ProfileEnum.ROLE_ADMIN);
 
                 return ok(response);
             }
@@ -222,7 +222,10 @@ public class EventController {
 
         event = this.eventService.save(event);
 
-        response.setData(convertEventEntityToDto(event));
+        EventDto eventDto = convertEventEntityToDto(event);
+        sendNotificationByUserDevice(eventDto, ProfileEnum.ROLE_USER);
+        response.setData(eventDto);
+
         return ok(response);
     }
 
@@ -277,8 +280,8 @@ public class EventController {
     }
 
 
-    private void sendNotificationByUserDevice(EventDto eventDto) {
-        List<UserDevice> userDevices = userDeviceService.findAllByUserProfile(ProfileEnum.ROLE_ADMIN);
+    private void sendNotificationByUserDevice(EventDto eventDto, ProfileEnum profileEnum) {
+        List<UserDevice> userDevices = userDeviceService.findAllByUserProfile(profileEnum);
         List<String> devicesIds = userDevices.stream().map(UserDevice::getDeviceId).collect(Collectors.toList());
 
         sendNotification(eventDto, devicesIds);
