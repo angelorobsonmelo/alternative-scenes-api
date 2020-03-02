@@ -62,7 +62,7 @@ CREATE TABLE event
   image_thumb_url  CHARACTER VARYING NOT NULL,
   locality_id INT               NOT NULL,
   user_app_id INT               NOT NULL,
-  status      BOOLEAN           NOT NULL DEFAULT FALSE,
+  status      CHARACTER VARYING NOT NULL DEFAULT 'PENDING',
   category_id INT               NOT NULL,
   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
   FOREIGN KEY (locality_id) REFERENCES locality (id),

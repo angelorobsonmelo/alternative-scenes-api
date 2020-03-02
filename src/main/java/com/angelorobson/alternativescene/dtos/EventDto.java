@@ -1,6 +1,8 @@
 package com.angelorobson.alternativescene.dtos;
 
 
+import com.angelorobson.alternativescene.enums.StatusEnum;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public class EventDto {
     private List<EventDateDto> eventDates;
     private List<MusicalGenreDto> musicalGenres;
     private CategoryDto category;
-    private Boolean status;
+    private StatusEnum status;
     private LocalDate registrationDate;
     private UserAppDto userApp;
     private String eventDate;
@@ -76,11 +78,11 @@ public class EventDto {
         this.category = category;
     }
 
-    public Boolean getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

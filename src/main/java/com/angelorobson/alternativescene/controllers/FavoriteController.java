@@ -6,6 +6,7 @@ import com.angelorobson.alternativescene.dtos.FavoriteSaveDto;
 import com.angelorobson.alternativescene.entities.Event;
 import com.angelorobson.alternativescene.entities.Favorite;
 import com.angelorobson.alternativescene.entities.UserApp;
+import com.angelorobson.alternativescene.enums.StatusEnum;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.FavoriteService;
@@ -71,7 +72,7 @@ public class FavoriteController {
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
         EventFilter eventFilter = new EventFilter();
-        eventFilter.setStatus(true);
+        eventFilter.setStatus(StatusEnum.APPROVED);
         Response<Page<EventDto>> response = new Response<>();
 
         PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);

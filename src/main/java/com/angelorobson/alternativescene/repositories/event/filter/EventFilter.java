@@ -1,18 +1,20 @@
 package com.angelorobson.alternativescene.repositories.event.filter;
 
+import com.angelorobson.alternativescene.enums.StatusEnum;
+
 import java.io.Serializable;
 
 public class EventFilter implements Serializable {
 
     private static final long serialVersionUID = -6209219512751878213L;
 
-    private Boolean status;
+    private StatusEnum status;
 
-    public Boolean getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 }

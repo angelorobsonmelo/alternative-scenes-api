@@ -7,6 +7,7 @@ import com.angelorobson.alternativescene.dtos.EventSaveDto;
 import com.angelorobson.alternativescene.entities.*;
 import com.angelorobson.alternativescene.entities.notification.Sender;
 import com.angelorobson.alternativescene.enums.ProfileEnum;
+import com.angelorobson.alternativescene.enums.StatusEnum;
 import com.angelorobson.alternativescene.repositories.event.filter.EventFilter;
 import com.angelorobson.alternativescene.response.Response;
 import com.angelorobson.alternativescene.services.*;
@@ -67,7 +68,7 @@ public class EventController {
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
         EventFilter eventFilter = new EventFilter();
-        eventFilter.setStatus(true);
+        eventFilter.setStatus(StatusEnum.APPROVED);
         Response<Page<EventDto>> response = new Response<>();
 
         PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);
@@ -87,7 +88,7 @@ public class EventController {
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
         EventFilter eventFilter = new EventFilter();
-        eventFilter.setStatus(false);
+        eventFilter.setStatus(StatusEnum.PENDING);
         Response<Page<EventDto>> response = new Response<>();
 
         PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);
@@ -209,16 +210,18 @@ public class EventController {
         return ok(response);
     }
 
-    @PutMapping(value = "/activateOrDeactivate/{id}")
+    @PutMapping(value = "/approvedOrReprove/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Response<EventDto>> activateOrDeactivate(@PathVariable("id") Long id,
-                                                                   @RequestParam(value = "active") Boolean active) {
+    public ResponseEntity<Response<EventDto>> approvedOrReprove(@PathVariable("id") Long id,
+                                                                   @RequestParam(value = "status") String status) {
         Response<EventDto> response = new Response<>();
         EventSaveDto eventSaveDto = new EventSaveDto();
         eventSaveDto.setId(Optional.of(id));
 
         Event event = eventService.findEventBy(id).get();
-        event.setStatus(active);
+        StatusEnum statusEnum = Enum.valueOf(StatusEnum.class, status);
+
+        event.setStatus(statusEnum);
 
         event = this.eventService.save(event);
 
@@ -237,7 +240,7 @@ public class EventController {
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
         EventFilter eventFilter = new EventFilter();
-        eventFilter.setStatus(true);
+        eventFilter.setStatus(StatusEnum.APPROVED);
         Response<Page<EventDto>> response = new Response<>();
 
         PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);

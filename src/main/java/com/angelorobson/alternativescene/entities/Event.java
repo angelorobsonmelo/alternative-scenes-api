@@ -1,11 +1,14 @@
 package com.angelorobson.alternativescene.entities;
 
+import com.angelorobson.alternativescene.enums.StatusEnum;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import static com.angelorobson.alternativescene.enums.StatusEnum.*;
 import static java.time.LocalDate.now;
 import static javax.persistence.FetchType.*;
 
@@ -19,7 +22,7 @@ public class Event implements Serializable {
     private String imageThumbUrl;
     private Locality locality;
     private UserApp userApp;
-    private Boolean status;
+    private StatusEnum status;
     private List<EventDate> eventDates;
     private Category category;
     private List<MusicalGenre> musicalGenres;
@@ -72,14 +75,14 @@ public class Event implements Serializable {
         this.userApp = userApp;
     }
 
-    public Boolean getStatus() {
+    @Enumerated(EnumType.STRING)
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
-
 
     @OneToMany(mappedBy = "event", orphanRemoval = true, fetch = EAGER, cascade = CascadeType.ALL)
     public List<EventDate> getEventDates() {
@@ -132,7 +135,7 @@ public class Event implements Serializable {
     @PrePersist
     public void prePersist() {
         this.registrationDate = now();
-        this.status = false;
+        this.status = PENDING;
     }
 
     @Override
@@ -145,7 +148,6 @@ public class Event implements Serializable {
                 Objects.equals(imageThumbUrl, event.imageThumbUrl) &&
                 Objects.equals(locality, event.locality) &&
                 Objects.equals(userApp, event.userApp) &&
-                Objects.equals(status, event.status) &&
                 Objects.equals(eventDates, event.eventDates) &&
                 Objects.equals(category, event.category) &&
                 Objects.equals(musicalGenres, event.musicalGenres) &&
