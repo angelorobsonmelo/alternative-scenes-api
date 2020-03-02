@@ -71,8 +71,6 @@ public class FavoriteController {
             @RequestParam(value = "ord", defaultValue = "id") String ord,
             @RequestParam(value = "dir", defaultValue = "ASC") String dir,
             @RequestParam(value = "perPage", defaultValue = "25") String perPage) {
-        EventFilter eventFilter = new EventFilter();
-        eventFilter.setStatus(StatusEnum.APPROVED);
         Response<Page<EventDto>> response = new Response<>();
 
         PageRequest pageRequest = PageRequest.of(pag, Integer.parseInt(perPage), valueOf(dir), ord);

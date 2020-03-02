@@ -8,4 +8,8 @@ public final class Constants {
         public static final String ANONYMOUS = "ROLE_ANONYMOUS";
     }
 
+    public static final class TimeZone {
+        public static final String TIME_ZONE = "America/Maceio";
+    }
+
 }
